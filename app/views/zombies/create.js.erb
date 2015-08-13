@@ -1,0 +1,3 @@
+alert('New zombie create successfully!!');
+jQuery('.zombies_table').append('<%= escape_javascript(render "zombie_new") %>');
+jQuery('#myModal').modal('hide');

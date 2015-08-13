@@ -1,0 +1,4 @@
+alert('Update successfully!'); 
+jQuery('#zombie_<%= @zombie.id%>').remove();
+jQuery('.zombies_table').append('<%= escape_javascript(render "zombie_new") %>');
+jQuery('#myModal').modal('hide');

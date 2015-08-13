@@ -1,0 +1,9 @@
+<tr id = "zombie_<%= @zombie.id%>" >
+  <td><%= @zombie.name %></td>
+  <td><%= @zombie.bio %></td>
+  <td><%= @zombie.age %></td>
+  <td><%= link_to "Edit", edit_zomby_path(@zombie), :remote => true %></td>
+    <td><%= link_to "Destroy", @zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %>
+    <td><%= link_to "Show Tweets", @zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %></td>
+    <td><%= link_to "Create Tweets", @zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %></td>
+</tr>

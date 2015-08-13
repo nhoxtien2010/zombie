@@ -1,0 +1,18 @@
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"><%= @zombie.name%></h4>
+      </div>
+      <div class="modal-body">
+        <%=render 'form'%>        
+      </div>
+      <div class="modal-footer">
+        <button id = "close_model" class="btn btn-default"> Close </button>
+      </div>
+    </div>
+  </div>
+</div>
