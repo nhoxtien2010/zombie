@@ -7,17 +7,10 @@ jQuery(document).ready(function(){
     jQuery.ajax({
       url: "/zombies/new",
       type: "POST",
-      data: {},
-      success: function(resp){ alert(" ok"); }
+      dataType: "json",
+      success: function(resp){
+        alert('successfully');
+      }
     });
   });
-
-
-  jQuery('#close_model').click(function(){
-    jQuery('#myModal').modal('hide');
-  });
-
-  $('#myModal').on('hidden', function(){
-    $(this).data('modal', null);
-});
 });

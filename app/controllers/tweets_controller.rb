@@ -1,11 +1,20 @@
 class TweetsController < ApplicationController
-  # GET /tweets
-  # GET /tweets.xml
+
+  before_filter :get_zombie
+
+
+
+
+  def get_zombie
+    @zombie = Zombie.find(params[:zomby_id])
+  end
+
   def index
-    @tweets = Tweet.all
+    @tweets = @zombie.tweets
 
     respond_to do |format|
-      format.html # index.html.erb
+      # format.html # index.html.erb
+      format.js 
       format.xml  { render :xml => @tweets }
     end
   end
@@ -24,10 +33,10 @@ class TweetsController < ApplicationController
   # GET /tweets/new
   # GET /tweets/new.xml
   def new
-    @tweet = Tweet.new
-
+    @tweet = Tweet.new    
     respond_to do |format|
-      format.html # new.html.erb
+      # format.html # new.html.erb
+      format.js
       format.xml  { render :xml => @tweet }
     end
   end
@@ -35,16 +44,20 @@ class TweetsController < ApplicationController
   # GET /tweets/1/edit
   def edit
     @tweet = Tweet.find(params[:id])
+    respond_to do |format|
+      format.js
+    end
   end
 
-  # POST /tweets
-  # POST /tweets.xml
+
   def create
     @tweet = Tweet.new(params[:tweet])
+    @tweet.zombie_id = @zombie.id
 
     respond_to do |format|
       if @tweet.save
-        format.html { redirect_to(@tweet, :notice => 'Tweet was successfully created.') }
+        format.js {render :js => 'alert("New tweet create successfully!"); jQuery("#tweetModal").modal("hide");'}
+        # format.html { redirect_to(zomby_tweets_path, :notice => 'Tweet was successfully created.') }
         format.xml  { render :xml => @tweet, :status => :created, :location => @tweet }
       else
         format.html { render :action => "new" }
@@ -60,10 +73,12 @@ class TweetsController < ApplicationController
 
     respond_to do |format|
       if @tweet.update_attributes(params[:tweet])
-        format.html { redirect_to(@tweet, :notice => 'Tweet was successfully updated.') }
+        format.js {render :js => 'alert("Tweet update successfully!"); jQuery("#editTweetModal").modal("hide");'}
+
+        # format.html { redirect_to([@zombie, @tweet], :notice => 'Tweet was successfully updated.') }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        # format.html { render :action => "edit" }
         format.xml  { render :xml => @tweet.errors, :status => :unprocessable_entity }
       end
     end
@@ -76,7 +91,8 @@ class TweetsController < ApplicationController
     @tweet.destroy
 
     respond_to do |format|
-      format.html { redirect_to(tweets_url) }
+      # format.html { redirect_to(tweets_url) }
+      format.js
       format.xml  { head :ok }
     end
   end

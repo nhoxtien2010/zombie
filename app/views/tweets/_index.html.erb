@@ -1,0 +1,27 @@
+<!-- Modal -->
+<div class="modal fade" id="tweetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+         <h1>Listing tweets of <%="zombie #{@zombie.name}"%></h1>
+           <table class="table">
+             <tr>
+               <th>Status</th>
+               <th></th>
+               <th></th>
+             </tr>
+             <% @tweets.each do |tweet| %>
+               <tr id = "tweet_<%= tweet.id %>">
+                 <td><%= tweet.status %></td>
+                 <td><%= link_to 'Edit', edit_zomby_tweet_path(@zombie, tweet), :remote => true %></td>
+                 <td><%= link_to 'Destroy', [@zombie,tweet], :confirm => 'Are you sure?', :method => :delete, :remote => true %></td>
+               </tr>
+             <% end %>
+       </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

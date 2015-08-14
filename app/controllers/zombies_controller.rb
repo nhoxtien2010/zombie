@@ -6,7 +6,9 @@ class ZombiesController < ApplicationController
 
   def zombie_new
     @zombie = Zombie.new
-    respond_to{|format| format.js}
+    respond_to do |format|
+      format.js
+    end
   end
 
   # GET /zombies
@@ -28,7 +30,7 @@ class ZombiesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js      
+      format.js
     end
   end
 
@@ -57,7 +59,7 @@ class ZombiesController < ApplicationController
     # render :js
     respond_to do |format|
       if @zombie.save
-        format.js
+        # format.js
         format.json {render :json => {'success' => true}}
         format.xml  {render :xml => @zombie, :status => :created, :location => @zombie }
       else

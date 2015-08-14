@@ -1,4 +1,4 @@
-<h1>Listing zombies</h1>
+<h1 class="text-center">Listing zombies</h1>
 
 <table class="zombies_table table">
   <tr>
@@ -17,13 +17,11 @@
     <td><%= zombie.age %></td>
     <td><%= link_to "Edit", edit_zomby_path(zombie), :remote => true %></td>
     <td><%= link_to "Destroy", zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %>
-    <td><%= link_to "Show Tweets", zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %></td>
-    <td><%= link_to "Create Tweets", zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %></td>
+    <td><%= link_to "Show Tweets",zomby_tweets_path(zombie) , :remote => true %></td>
+    <td><%= link_to "Create Tweets", new_zomby_tweet_path(zombie), :remote => true %></td>
   </tr>
 <% end %>
 </table>
-
-
 <br />
 
 

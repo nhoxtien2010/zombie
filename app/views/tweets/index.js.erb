@@ -1,0 +1,7 @@
+jQuery(".modal_form").append("<%= escape_javascript(render 'index') %>");
+
+jQuery('#tweetModal').modal('show');
+
+ jQuery('body').on('hidden.bs.modal', '#tweetModal', function () {
+  jQuery(this).remove();
+});

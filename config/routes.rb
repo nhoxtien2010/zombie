@@ -1,7 +1,6 @@
 TwitterForZombies::Application.routes.draw do
 
 
-  root :to => 'zombies#index'
 
 
   resources :brains
@@ -12,6 +11,8 @@ TwitterForZombies::Application.routes.draw do
   end
 
   post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
+  root :to => "zombies#index"
+
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
