@@ -1,18 +1,32 @@
-
-
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel"><%= @zombie.name%></h4>
-      </div>
-      <div class="modal-body">
-        <%=render 'form'%>        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+<%= form_for(@zombie, :remote => true) do |f| %>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel"><%= @zombie.name%></h4>
+        </div>
+        <div class="modal-body">          
+          <div id="error">
+          </div>
+          <div class="form-group">
+            <%= f.label :name %><br />
+            <%= f.text_field :name , :class => "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= f.label :bio %><br />
+            <%= f.text_area :bio,  :class => "form-control"%>
+          </div>
+          <div class="form-group">
+            <%= f.label :age %><br />
+            <%= f.text_field :age,  :class => "form-control" %>
+          </div>
+        </div>
+        <div class="modal-footer">        
+          <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+          <%= f.submit( :class => "btn btn-default") %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

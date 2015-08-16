@@ -2,9 +2,3 @@
   min-height: 500px;
   margin: 20px;
 }
-
-.field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table;
-}

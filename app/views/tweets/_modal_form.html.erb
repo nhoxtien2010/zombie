@@ -1,15 +1,32 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="tweetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <%=render 'form'%>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+<%= form_for([@zombie, @tweet], :remote=> true) do |f| %>
+  <div class="modal fade" id="tweetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">        
+            <% if @tweet.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(@tweet.errors.count, "error") %> prohibited this tweet from being saved:</h2>
+
+                <ul>
+                <% @tweet.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <div class="field">
+              <%= f.label :status %><br />
+              <%= f.text_field :status %>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+           <%= f.submit(:class => "btn btn-default") %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

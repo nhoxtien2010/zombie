@@ -1,5 +1,4 @@
 <h1 class="text-center">Listing zombies</h1>
-
 <table class="zombies_table table">
   <tr>
     <th>Name</th>
@@ -9,24 +8,22 @@
     <th></th>
     <th></th>
   </tr>
-
-<% @zombies.each do |zombie| %>
+  <% @zombies.each do |zombie| %>
   <tr id = "zombie_<%= zombie.id%>" >
     <td><%= zombie.name %></td>
     <td><%= zombie.bio %></td>
     <td><%= zombie.age %></td>
     <td><%= link_to "Edit", edit_zomby_path(zombie), :remote => true %></td>
     <td><%= link_to "Destroy", zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %>
-    <td><%= link_to "Show Tweets",zomby_tweets_path(zombie) , :remote => true %></td>
-    <td><%= link_to "Create Tweets", new_zomby_tweet_path(zombie), :remote => true %></td>
-  </tr>
-<% end %>
-</table>
-<br />
+      <td><%= link_to "Show Tweets",zomby_tweets_path(zombie) , :remote => true %></td>
+      <td><%= link_to "Create Tweets", new_zomby_tweet_path(zombie), :remote => true %></td>
+    </tr>
+    <% end %>
+  </table>
+  <br />
+  <div class="modal_form">
+    <% @zombie = Zombie.new%>
+    <%= render 'modal_form' %>
+  </div>
+  <a id="new_link" class="btn btn-default" > New zombie </a>
 
-
-
-<div class="modal_form">
-
-</div>
-<a id="new_link" > New link </a>

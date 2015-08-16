@@ -7,7 +7,7 @@ class ZombiesController < ApplicationController
   def zombie_new
     @zombie = Zombie.new
     respond_to do |format|
-      format.js
+      format.json {render :json => {"success"=> true} }
     end
   end
 
@@ -34,19 +34,6 @@ class ZombiesController < ApplicationController
     end
   end
 
-  # GET /zombies/new
-  # GET /zombies/new.xml
-  def new
-    @zombie = Zombie.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @zombie } 
-    end
-  end
-
-
-  # GET /zombies/1/edit
   def edit
     @zombie = Zombie.find(params[:id])
     respond_to do |format|
@@ -55,23 +42,16 @@ class ZombiesController < ApplicationController
   end
   def create
     @zombie = Zombie.new(params[:zombie])
-
-    # render :js
     respond_to do |format|
       if @zombie.save
-        # format.js
-        format.json {render :json => {'success' => true}}
-        format.xml  {render :xml => @zombie, :status => :created, :location => @zombie }
+        format.json {render :json => {'success' => true, 'zombie_id'=>  @zombie.id }}
       else
-        format.json {render :json => {'success' => false}}
-        format.xml  { render :xml => @zombie.errors, :status => :unprocessable_entity }
+        format.json {render :json => {:errors => @zombie.errors.full_messages }}
       end
     end
 
   end
 
-  # PUT /zombies/1
-  # PUT /zombies/1.xmle
   def update
     @zombie = Zombie.find(params[:id])
 
