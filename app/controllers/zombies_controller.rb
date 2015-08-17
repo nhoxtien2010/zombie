@@ -1,5 +1,8 @@
 class ZombiesController < ApplicationController
 
+  require random_zombie
+
+
   def make_rooting
       self.rooting = true if age >20
   end
@@ -75,6 +78,20 @@ class ZombiesController < ApplicationController
       # format.html { redirect_to(tweets_url) }
       format.json  { head :ok }
       format.js
+    end
+  end
+
+
+  def random_zombie(number)
+    arr_zombie = ZombieGenerator.generate(number)
+    arr_zombie.each do |zombie|
+      zb = Zombie.new
+      zb.name = zombie['name']
+      zb.name = zombie['bio']
+      zb.name = zombie['email']
+      zb.name = zombie['name']
+      zb.name = zombie['name']
+      zb.name = zombie['name']
     end
   end
 end

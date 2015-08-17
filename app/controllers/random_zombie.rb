@@ -63,5 +63,9 @@ class ZombieGenerator
     name ||= random_name(unique)
     name.downcase.gsub(' ','.') + '@' + @domains[get_random_int(0,@domains_len-1)]
   end
-  
+
+  private
+  def get_random_int(min, max)
+    (rand*(max-min+1)).floor+min
+  end
 end
