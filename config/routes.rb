@@ -10,10 +10,12 @@ TwitterForZombies::Application.routes.draw do
     get :decomp, :on => :member
   end
 
-  post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
-  root :to => "zombies#index"
 
-  
+  post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
+
+  post 'login/login' => 'login#login'
+
+  root :to => 'login#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

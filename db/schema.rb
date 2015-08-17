@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150814035116) do
+ActiveRecord::Schema.define(:version => 20150817075401) do
 
   create_table "brains", :force => true do |t|
     t.integer "zombie_id"
@@ -20,11 +20,35 @@ ActiveRecord::Schema.define(:version => 20150814035116) do
 
   add_index "brains", ["zombie_id"], :name => "index_brains_on_zombie_id"
 
+  create_table "supports", :force => true do |t|
+    t.string  "name"
+    t.integer "price"
+    t.integer "attack"
+    t.integer "speed"
+    t.integer "defence"
+    t.integer "zombie_id"
+  end
+
   create_table "tweets", :force => true do |t|
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "zombie_id"
+  end
+
+  create_table "weapon_types", :force => true do |t|
+    t.string "name"
+    t.string "note"
+  end
+
+  create_table "weapons", :force => true do |t|
+    t.string  "name"
+    t.integer "price"
+    t.integer "attack"
+    t.integer "speed"
+    t.integer "range"
+    t.integer "zombie_id"
+    t.integer "weapon_type_id"
   end
 
   create_table "zombies", :force => true do |t|
@@ -35,6 +59,11 @@ ActiveRecord::Schema.define(:version => 20150814035116) do
     t.datetime "updated_at"
     t.string   "email"
     t.boolean  "rotting",    :default => false
+    t.integer  "gold"
+    t.integer  "attack"
+    t.integer  "speed"
+    t.integer  "defence"
+    t.string   "password"
   end
 
 end

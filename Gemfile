@@ -5,8 +5,8 @@ gem 'rails', '3.0.20'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
+# gem 'sqlite3'
+gem 'pg', '0.13.1'
 # gem 'jquery-rails'
 
 # Use unicorn as the web server

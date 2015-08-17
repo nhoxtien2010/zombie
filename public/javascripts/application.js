@@ -3,7 +3,7 @@
 
 
 jQuery(document).ready(function(){
-  
+
 
   jQuery("#new_link").click(function(){
     jQuery.ajax({
@@ -16,14 +16,32 @@ jQuery(document).ready(function(){
         jQuery('#zombie_bio').val('');
         jQuery('input#zombie_age').val('');
         jQuery('div#error');
-      }      
+      }
     });
   });
 
-  
+  // #######################login############################
+
+  jQuery("#login").click(function(){
+    jQuery.ajax({
+      url: "login/login",
+      type: "POST",
+      data: {login:{name: jQuery('#zombieName').val(), pass: jQuery("#zombiePass").val() }},
+      // dataType: 'json',
+      success: function(result){
+        if (result.success == true){
+          alert('Login successfully!');
+          window.location.href = "http://localhost:3000/zombies"}
+        else{
+          alert('Zombie name or Password wrong!');
+        }
+      }
+    });
+  });
+
   jQuery("#new_zombie").on("ajax:success", function(e, data, status, xhr){
     if(data.success)
-    { 
+    {
       jQuery('#myModal').modal('hide');
       var insert = '<tr id="'+data.zombie_id+'">'
       insert = insert +'<td>'+jQuery('input#zombie_name').val()+'</td>'
@@ -41,18 +59,19 @@ jQuery(document).ready(function(){
     }
     else
     {
-      for (var i = 0; i < data.errors.length; i++) { 
+      for (var i = 0; i < data.errors.length; i++) {
         jQuery('div#error').append('<p>'+data.errors[i]+'</p>');
       }
 
     }
-    
   });
 
   jQuery("#new_zombie").bind("ajax:error", function(xhr, data, status){
     alert('Some thing went wrong!!');
-    
+
   });
+
+
 
 
 
