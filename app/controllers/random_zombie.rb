@@ -8,6 +8,7 @@ class ZombieGenerator
     @bios = ['man', 'tree', 'monster', 'ped', 'plant', 'fish', 'bird']
     @firsts_len = @firsts.length
     @lasts_len = @lasts.length
+    @used_names = {}
 
     @domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'yopmail.com', 'hotmail.com','edge-works.net']
     @domains_len = @domains.length
@@ -23,8 +24,7 @@ class ZombieGenerator
       data << {
         'name' => name,
         'bio' => random_bio,
-        'email' => random_email(name),
-        'age' => random_age,
+        'birthday' => get_random_time,
         'gold' => random_number,
         'attack' => random_number,
         'defence' => random_number,
@@ -67,5 +67,11 @@ class ZombieGenerator
   private
   def get_random_int(min, max)
     (rand*(max-min+1)).floor+min
+  end
+
+  def get_random_time(min='1980-01-01', max='2000-01-01')
+    from = Time.parse(min).to_i
+    to = Time.parse(max).to_i
+    Time.at(get_random_int(from, to))
   end
 end

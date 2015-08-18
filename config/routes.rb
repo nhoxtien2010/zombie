@@ -9,13 +9,18 @@ TwitterForZombies::Application.routes.draw do
     resources :tweets
     get :decomp, :on => :member
   end
-
+  post 'zombies/random_zombie' => 'zombies#random_zombie'
 
   post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
 
   post 'login/login' => 'login#login'
 
-  root :to => 'login#index'
+  root :to => 'weapons#index'
+  get 'weapons' => 'weapons#index'
+  post 'weapons/buy' => 'weapons#buy', :as => 'buy_weapon'
+  post 'weapons/unequip' => 'weapons#unequip', :as => 'unequip_weapon'
+
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

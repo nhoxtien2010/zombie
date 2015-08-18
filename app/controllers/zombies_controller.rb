@@ -1,11 +1,6 @@
 class ZombiesController < ApplicationController
 
-  require random_zombie
-
-
-  def make_rooting
-      self.rooting = true if age >20
-  end
+  require '/data/test/TwitterForZombies/app/controllers/random_zombie'
 
   def zombie_new
     @zombie = Zombie.new
@@ -82,16 +77,25 @@ class ZombiesController < ApplicationController
   end
 
 
-  def random_zombie(number)
-    arr_zombie = ZombieGenerator.generate(number)
+  def random_zombie
+
+    number = params[:number_zombies].to_i
+    arr_zombie = ZombieGenerator.new.generate(number)
     arr_zombie.each do |zombie|
       zb = Zombie.new
       zb.name = zombie['name']
-      zb.name = zombie['bio']
-      zb.name = zombie['email']
-      zb.name = zombie['name']
-      zb.name = zombie['name']
-      zb.name = zombie['name']
+      zb.bio = zombie['bio']
+      zb.birthday = zombie['birthday']
+      zb.gold = zombie['gold']
+      zb.attack = zombie['attack']
+      zb.defence = zombie['defence']
+      zb.speed = zombie['speed']
+      zb.password = zombie['password']
+      zb.save
+    end
+
+    respond_to do |format|
+      format.js {render :js => 'location.reload();'}
     end
   end
 end

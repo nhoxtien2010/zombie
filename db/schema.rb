@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150817105722) do
+ActiveRecord::Schema.define(:version => 20150818095629) do
 
   create_table "brains", :force => true do |t|
     t.integer "zombie_id"
@@ -19,6 +19,13 @@ ActiveRecord::Schema.define(:version => 20150817105722) do
   end
 
   add_index "brains", ["zombie_id"], :name => "index_brains_on_zombie_id"
+
+  create_table "equips", :force => true do |t|
+    t.integer  "zombie_id"
+    t.integer  "weapon_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "supports", :force => true do |t|
     t.string  "name"
@@ -47,7 +54,6 @@ ActiveRecord::Schema.define(:version => 20150817105722) do
     t.integer "attack"
     t.integer "speed"
     t.integer "range"
-    t.integer "zombie_id"
     t.integer "weapon_type_id"
   end
 
@@ -56,7 +62,6 @@ ActiveRecord::Schema.define(:version => 20150817105722) do
     t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "email"
     t.boolean  "rotting",    :default => false
     t.integer  "gold"
     t.integer  "attack"

@@ -1,8 +1,8 @@
 
-jQuery('.modal_form').append('<%= escape_javascript(render "modal_form") %>');
+jQuery('.modal_form').append('<%= escape_javascript(render "edit_form") %>');
 
-jQuery('#myModal').modal('show');
+jQuery('#editModal').modal('show');
 
- jQuery('body').on('hidden.bs.modal', '#myModal', function () {
+ jQuery('body').on('hidden.bs.modal', '#editModal', function () {
   jQuery(this).remove();
 });

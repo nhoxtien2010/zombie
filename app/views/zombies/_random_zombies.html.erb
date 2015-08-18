@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div class="modal fade" id="random_zombie_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"><%= @zombie.name%></h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Number of randoms</label><br>
+          <input  class="form-control" id="number_zombies" size="30" type="number"min="0" step="1"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+        <button id= "random_zombie_btn"type="button" class="btn btn-default" data-dismiss="modal">Create Random Zombie</button>
+      </div>
+    </div>
+  </div>
+</div>

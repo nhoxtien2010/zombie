@@ -1,0 +1,32 @@
+<!-- show all weapons -->
+
+<h1 class="text-center">Listing Weapons</h1>
+<table class="table weapons-table">
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Attack</th>
+    <th>Speed</th>
+    <th>Range</th>
+    <th>Type</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @weapons.each do |wp| %>
+    <tr id = "weapon_<%= wp.id%>" >
+      <td><%= wp.name %></td>
+      <td><%= wp.price %></td>
+      <td><%= wp.attack %></td>
+      <td><%= wp.speed%></td>
+      <td><%= wp.range %></td>
+      <td><%= wp.weapon_type.name if wp.weapon_type%></td>
+      <td>
+        <%= link_to "Buy", buy_weapon_path, :remote => true, :class => "btn btn-primary"%>
+        <%= link_to "Unequip", unequip_weapon_path, :remote => true, :class => "btn btn-warning"%>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+
+  <%= render 'modal_login'%>
+  <br />

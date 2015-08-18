@@ -3,7 +3,12 @@
   <tr>
     <th>Name</th>
     <th>Bio</th>
-    <th>Age</th>
+    <th>Birthday</th>
+    <th>Gold</th>
+    <th>Attack</th>
+    <th>Defence</th>
+    <th>Speed</th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -12,7 +17,11 @@
   <tr id = "zombie_<%= zombie.id%>" >
     <td><%= zombie.name %></td>
     <td><%= zombie.bio %></td>
-    <td><%= zombie.age %></td>
+    <td><%= zombie.birthday %></td>
+    <td><%= zombie.gold%></td>
+    <td><%= zombie.attack %></td>
+    <td><%= zombie.defence %></td>
+    <td><%= zombie.speed %></td>
     <td><%= link_to "Edit", edit_zomby_path(zombie), :remote => true %></td>
     <td><%= link_to "Destroy", zombie, :confirm => "Are you sure?", :method => :delete, :remote => true %>
       <td><%= link_to "Show Tweets",zomby_tweets_path(zombie) , :remote => true %></td>
@@ -24,6 +33,8 @@
   <div class="modal_form">
     <% @zombie = Zombie.new%>
     <%= render 'modal_form' %>
+    <%= render 'random_zombies'%>
   </div>
   <a id="new_link" class="btn btn-default" > New zombie </a>
+  <a id="random_zombie" class="btn btn-default" > Create Random Zombie </a>
 

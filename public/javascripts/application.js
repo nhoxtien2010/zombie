@@ -4,6 +4,10 @@
 
 jQuery(document).ready(function(){
 
+  
+  // jQuery('#login_modal').modal({backdrop: 'static', keyboard: false});
+  // jQuery("#login_modal").modal("show");
+  jQuery('[data-toggle="dropdown"]').parent().removeClass('open');
 
   jQuery("#new_link").click(function(){
     jQuery.ajax({
@@ -19,8 +23,27 @@ jQuery(document).ready(function(){
       }
     });
   });
+  // #######################random ############################
+
+  jQuery("#random_zombie").click(function(){
+    jQuery('#random_zombie_modal').modal("show");
+  });
+
+
+  jQuery("#random_zombie_btn").click(function(){
+    jQuery.ajax({
+      url: "/zombies/random_zombie",
+      type: "POST",
+      data: {number_zombies: jQuery('#number_zombies').val()},
+      success: function(result){
+        alert("success");
+      }
+    });
+  });
 
   // #######################login############################
+
+
 
   jQuery("#login").click(function(){
     jQuery.ajax({
@@ -30,8 +53,18 @@ jQuery(document).ready(function(){
       // dataType: 'json',
       success: function(result){
         if (result.success == true){
+          jQuery('#login_modal').modal('hide');
           alert('Login successfully!');
-          window.location.href = "http://localhost:3000/zombies"}
+          insert = '<img src="images/zombie.jpg" class="img-rounded" alt="zombie image" width="50" height="50">';
+          
+
+          jQuery('.navbar-right').append(insert);
+          for(var i =0 ; i< result.weapons.length; i++)
+          {
+            jQuery('#weapon_'+result.weapons[i].id).css('color','red');
+          }
+
+        }
         else{
           alert('Zombie name or Password wrong!');
         }

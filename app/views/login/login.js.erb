@@ -1,0 +1,6 @@
+jQuery('.navbar-right').append('<%= session[:current_zombie]%>');
+
+<% @zombie = session[:current_zombie]%>
+<% @zombie.weapons.each do |weapon|%>
+  jQuery('#weapon_<%= weapon.id %> > .btn').prop('disabled', true);
+<% end %>
