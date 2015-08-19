@@ -1,0 +1,38 @@
+<!-- show all supports -->
+
+<h1 class="text-center">Listing Supports <%= @zombie.name%></h1>
+<table class="table weapons-table">
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Attack</th>
+    <th>Speed</th>
+    <th>Defence</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @supports.each do |sp| %>
+    <tr id = "support_<%= sp.id%>" >
+      <td class = "support_name"><%= sp.name %></td>
+      <td class="support_price"><%= sp.price %></td>
+      <td class="support_attack"><%= sp.attack %></td>
+      <td class="support_speed"><%= sp.speed%></td>
+      <td class="support_defence"><%= sp.defence %></td>
+      <td>
+        <button class="btn btn-primary wear " >Buy</button>
+        <button class="btn btn-warning unwear disabled">Unequip</button>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+  <%= render '/weapons/zombie_info'%>
+  <br />
+  <%= @zombie_supports[0].name%>
+
+<%= javascript_tag do -%>
+  <% @zombie_supports.each do |sp|%>
+    jQuery('#support_<%= sp.id%>').css('color', 'red');
+    jQuery('#support_<%= sp.id%> .wear').addClass('disabled');
+    jQuery('#support_<%= sp.id%> .unwear').removeClass('disabled');
+  <% end %>
+<% end -%>

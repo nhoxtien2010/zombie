@@ -1,4 +1,5 @@
 class Support < ActiveRecord::Base
-  belongs_to :zombie
+  has_many :cloths
+  has_many :zombies, :through => :cloths, :source => :zombie
 
 end

@@ -1,0 +1,6 @@
+<% supports = @zombie.supports%>
+<% supports.each do |sp|%>
+  jQuery('#weapon_'+sp.id).css('color','red');
+  jQuery('#weapon_'+sp.id +' .wear').addClass('disabled');
+  jQuery('#weapon_'+sp.id +' .unwear').removeClass('disabled');
+<% end%>

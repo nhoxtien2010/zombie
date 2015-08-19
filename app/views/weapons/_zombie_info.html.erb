@@ -1,0 +1,53 @@
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="zombie_info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"> MY ZOMBIE </h4>
+      </div>
+      <div class="modal-body">
+      <table class="table">
+        <tr>
+          <th>Atrribute</th>
+          <th>Info</th>  
+        </tr>
+        <tr>
+          <td >Name:</td>
+          <td id = "zombie_name"><%= @zombie.name %></td>
+        </tr>
+        <tr>
+          <td>Bio:</td>
+          <td id= "zombie_bio"><%= @zombie.bio %></td>
+        </tr>
+        <tr>
+          <td>Birthday:</td>
+          <td id= "zombie_birthday"><%= @zombie.birthday %></td>
+        </tr>
+        <tr>
+          <td>Gold:</td>
+          <td id="zombie_gold"><%= @zombie.gold %></td>
+        </tr>
+        <tr>
+          <td>Attack:</td>
+          <td id = "zombie_attack"><%= @zombie.attack %></td>
+        </tr>
+        <tr>
+          <td>Defence:</td>
+          <td id = "zombie_defence"><%= @zombie.defence %></td>
+        </tr>
+        <tr>
+          <td>Speed:</td>
+          <td id = "zombie_speed"><%= @zombie.speed %></td>
+        </tr>
+      </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

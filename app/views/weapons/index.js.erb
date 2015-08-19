@@ -1,5 +1,7 @@
 <% @zombie.weapons.each do |weapon|%>
 
+<%= render 'zombie_info'%>
+
 
 jQuery('#weapon_<%= weapon.id %> > .btn').prop('disabled', true);
 <% end %>

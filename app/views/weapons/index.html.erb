@@ -14,19 +14,22 @@
   </tr>
   <% @weapons.each do |wp| %>
     <tr id = "weapon_<%= wp.id%>" >
-      <td><%= wp.name %></td>
-      <td><%= wp.price %></td>
-      <td><%= wp.attack %></td>
-      <td><%= wp.speed%></td>
-      <td><%= wp.range %></td>
-      <td><%= wp.weapon_type.name if wp.weapon_type%></td>
+      <td class = "weapon_name"><%= wp.name %></td>
+      <td class="weapon_price"><%= wp.price %></td>
+      <td class="weapon_attack"><%= wp.attack %></td>
+      <td class="weapon_speed"><%= wp.speed%></td>
+      <td class="weapon_range"><%= wp.range %></td>
+      <td class="weapon_type"><%= wp.weapon_type.name if wp.weapon_type%></td>
       <td>
-        <%= link_to "Buy", buy_weapon_path, :remote => true, :class => "btn btn-primary"%>
-        <%= link_to "Unequip", unequip_weapon_path, :remote => true, :class => "btn btn-warning"%>
+        <button class="btn btn-primary buy" >Buy</button>
+        <button class="btn btn-warning unequip disabled" >Unequip</button>
       </td>
     </tr>
   <% end %>
   </table>
 
   <%= render 'modal_login'%>
+
+  <% @zombie = Zombie.new %>
+  <%= render 'zombie_info'%>
   <br />

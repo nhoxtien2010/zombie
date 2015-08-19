@@ -5,8 +5,8 @@ class LoginController < ApplicationController
     respond_to do |format|
       if zombie.length != 0
         session[:current_zombie] = zombie.first
-        weapons = Zombie.find(49).weapons
-        format.json {render :json => {:success => true, :weapons => weapons, :zombie => zombie.first }}
+        weapons = zombie.first.weapons
+        format.json {render :json => {:success => true, :zombie => zombie.first }}
       else
         format.json {render :json => {:success => false}}
       end

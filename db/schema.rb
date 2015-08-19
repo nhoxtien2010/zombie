@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150818095629) do
+ActiveRecord::Schema.define(:version => 20150819074534) do
 
   create_table "brains", :force => true do |t|
     t.integer "zombie_id"
@@ -19,6 +19,13 @@ ActiveRecord::Schema.define(:version => 20150818095629) do
   end
 
   add_index "brains", ["zombie_id"], :name => "index_brains_on_zombie_id"
+
+  create_table "cloths", :force => true do |t|
+    t.integer  "zombie_id"
+    t.integer  "support_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "equips", :force => true do |t|
     t.integer  "zombie_id"
@@ -33,7 +40,6 @@ ActiveRecord::Schema.define(:version => 20150818095629) do
     t.integer "attack"
     t.integer "speed"
     t.integer "defence"
-    t.integer "zombie_id"
   end
 
   create_table "tweets", :force => true do |t|
