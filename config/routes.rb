@@ -15,7 +15,7 @@ TwitterForZombies::Application.routes.draw do
 
   post 'login/login' => 'login#login'
 
-  root :to => 'weapons#index'
+  root :to => 'login#index'
   get 'weapons' => 'weapons#index'
   get 'supports' => 'supports#index', :as => "supports"
   post 'weapons/buy' => 'weapons#buy', :as => 'buy_weapon'
@@ -24,7 +24,7 @@ TwitterForZombies::Application.routes.draw do
 
 
   post 'supports/wear' => 'supports#wear', :as => 'wear_support'
-  post 'supports/unwear' => 'supports#wear', :as => 'unwear_support'
+  post 'supports/unwear' => 'supports#unwear', :as => 'unwear_support'
 
 
   # The priority is based upon order of creation:

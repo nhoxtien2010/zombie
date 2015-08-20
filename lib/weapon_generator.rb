@@ -8,7 +8,6 @@ class WeaponGenerator
   def generate(num, unique=false)
     data = []
     1.upto(num).each do |idx|
-      name = random_name(unique)
       data << {
         'name' => random_name,
         'price' => random_number,
@@ -28,7 +27,10 @@ class WeaponGenerator
   end
 
   def random_name
-    @weapon_names[get_random_int(0, @weapon_names.length-1)]
+    # weapon_length = @weapon_names.length -1
+    weapon_length = @weapon_names.length-1
+    @weapon_names[get_random_int(0, weapon_length)]
+
   end
 
 

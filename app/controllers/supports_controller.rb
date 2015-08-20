@@ -4,7 +4,7 @@ class SupportsController < ApplicationController
   before_filter :get_zombie
 
   def get_zombie
-    @zombie = session[:current_zombie]
+    @zombie = Zombie.find(session[:current_zombie])
   end
 
 
@@ -42,8 +42,10 @@ class SupportsController < ApplicationController
   end
 
   def unwear
-    support = support.find(params[:support_id])
+    success = false
+    support = Support.find(params[:support_id])
     cloth= Cloth.where(:support_id => params[:support_id], :zombie_id => @zombie.id).first
+    success = true if cloth
     cloth.delete
     cloth.save
 
@@ -51,12 +53,9 @@ class SupportsController < ApplicationController
     @zombie.speed = @zombie.speed - support.speed
     @zombie.defence = @zombie.defence - support.defence
     @zombie.save
+
     respond_to do |format|
-      if cloth
-        format.json {render :json =>{:success => true}}
-      else
-        format.json {render :json => {:success => false}}
-      end
+      format.json{render :json => {:success => success}}
     end
 
   end

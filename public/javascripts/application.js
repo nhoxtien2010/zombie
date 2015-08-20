@@ -8,10 +8,8 @@ jQuery(document).ready(function(){
     jQuery('#zombie_info').modal('show');
   });
 
-  if(document.cookie != "login:true"){
-    jQuery('#login_modal').modal({backdrop: 'static', keyboard: false});
-  };
-  
+  jQuery('#login_modal').modal({backdrop: 'static', keyboard: false});
+
   // jQuery('[data-toggle="dropdown"]').parent().removeClass('open');
 
   jQuery("#new_link").click(function(){
@@ -101,25 +99,25 @@ jQuery(".wear").click(function(){
           zombie_gold = parseInt(jQuery('#zombie_gold').html());
           support_price =parseInt(jQuery('#'+support_string + ' .support_price').html());
           jQuery('#zombie_gold').html(zombie_gold - support_price);
-          alert('price:'+ support_price);
+          
 
           // update zombie attack
           zombie_attack = parseInt(jQuery('#zombie_attack').html());
           support_attack =parseInt(jQuery('#'+support_string + ' .support_attack').html());
           jQuery('#zombie_attack').html(zombie_attack + support_attack);
-          alert('attack:'+ support_attack);
+          
 
           // update zombie speed
           zombie_speed = parseInt(jQuery('#zombie_speed').html());
           support_speed =parseInt(jQuery('#'+support_string + ' .support_speed').html());
           jQuery('#zombie_speed').html(zombie_speed + support_speed);
-          alert('speed:'+ support_speed);
+          
 
           // update zombie defence
           zombie_denfence = parseInt(jQuery('#zombie_denfence').html());
           support_defence =parseInt(jQuery('#'+support_string + ' .support_defence').html());
           jQuery('#zombie_denfence').html(zombie_denfence + support_defence);
-          alert('defence:'+ support_defence);
+          
         }
         else
         {
@@ -135,8 +133,8 @@ jQuery(".wear").click(function(){
 jQuery(".unwear").click(function(){
 
     var support_string = jQuery(this).closest('tr').attr('id');
-    var support_id = weapon_string.split("_")[1];
-    var support_position = jQuery(this);
+    var support_id = support_string.split("_")[1];
+    var current_position = jQuery(this);
 
     jQuery.ajax({
       url: "/supports/unwear",
@@ -150,7 +148,7 @@ jQuery(".unwear").click(function(){
 
           current_position.closest('tr').css('color','black');
           current_position.addClass('disabled');
-          jQuery('#'+weapon_string + ' .wear').removeClass('disabled');
+          jQuery('#'+support_string + ' .wear').removeClass('disabled');
 
           // update zombie attack
           zombie_attack = parseInt(jQuery('#zombie_attack').html());
@@ -260,9 +258,8 @@ jQuery(".unequip").click(function(){
         if (result.success == true){
           jQuery('#login_modal').modal('hide');
           alert('Login successfully!');
-          document.cookie = "login:true";
-
-          fill_zombie(result.zombie);
+          window.location.replace("http://localhost:3000/weapons");
+          // fill_zombie(result.zombie);
 
           // jQuery('.main').append(modal_info);
           // jQuery('#zombie_info_btn').click(function(){
@@ -274,12 +271,12 @@ jQuery(".unequip").click(function(){
           jQuery('.navbar-right').append(insert);
           // jQuery.append
 
-          for(var i =0 ; i< result.weapons.length; i++)
-          {
-            jQuery('#weapon_'+result.weapons[i].id).css('color','red');
-            jQuery('#weapon_'+result.weapons[i].id +' .buy').addClass('disabled');
-            jQuery('#weapon_'+result.weapons[i].id +' .unequip').removeClass('disabled');
-          }
+          // for(var i =0 ; i< result.weapons.length; i++)
+          // {
+          //   jQuery('#weapon_'+result.weapons[i].id).css('color','red');
+          //   jQuery('#weapon_'+result.weapons[i].id +' .buy').addClass('disabled');
+          //   jQuery('#weapon_'+result.weapons[i].id +' .unequip').removeClass('disabled');
+          // }
 
         }
         else{

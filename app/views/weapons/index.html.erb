@@ -27,9 +27,12 @@
     </tr>
   <% end %>
   </table>
-
-  <%= render 'modal_login'%>
-
-  <% @zombie = Zombie.new %>
   <%= render 'zombie_info'%>
   <br />
+  <%= javascript_tag do %>
+    <% @zombie_weapons.each do |wp|%>
+      jQuery('#weapon_<%= wp.id%>').css('color', 'red');
+      jQuery('#weapon_<%= wp.id%> .buy').addClass('disabled');
+      jQuery('#weapon_<%= wp.id%> .unequip').removeClass('disabled');
+    <% end%>
+  <% end %>

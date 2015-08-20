@@ -1,6 +1,6 @@
-class ZombiesController < ApplicationController
+require 'lib/zombie_generator'
 
-  require '/data/test/TwitterForZombies/app/controllers/random_zombie'
+class ZombiesController < ApplicationController
 
   def zombie_new
     @zombie = Zombie.new

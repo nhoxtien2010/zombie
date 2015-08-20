@@ -1,6 +1,6 @@
 <!-- show all supports -->
 
-<h1 class="text-center">Listing Supports <%= @zombie.name%></h1>
+<h1 class="text-center">Listing Supports</h1>
 <table class="table weapons-table">
   <tr>
     <th>Name</th>
@@ -27,7 +27,6 @@
   </table>
   <%= render '/weapons/zombie_info'%>
   <br />
-  <%= @zombie_supports[0].name%>
 
 <%= javascript_tag do -%>
   <% @zombie_supports.each do |sp|%>

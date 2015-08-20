@@ -3,15 +3,15 @@ class WeaponsController < ApplicationController
   before_filter :get_zombie
 
   def get_zombie
-    @zombie = session[:current_zombie]
+    @zombie = Zombie.find(session[:current_zombie])
   end
 
   def index
     @weapons = Weapon.all
+    @zombie_weapons = @zombie.weapons
 
     respond_to do |format|
       format.html
-      format.js
     end
 
 
@@ -44,8 +44,10 @@ class WeaponsController < ApplicationController
   end
 
   def unequip
+    success = false
     weapon = Weapon.find(params[:weapon_id])
     eq= Equip.where(:weapon_id => params[:weapon_id], :zombie_id => @zombie.id).first
+    success = true if eq
     eq.delete
     eq.save
 
@@ -53,7 +55,7 @@ class WeaponsController < ApplicationController
     @zombie.speed = @zombie.speed - weapon.speed
     @zombie.save
     respond_to do |format|
-      if eq
+      if success
         format.json {render :json =>{:success => true}}
       else
         format.json {render :json => {:success => false}}
