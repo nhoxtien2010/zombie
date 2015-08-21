@@ -4,6 +4,28 @@
 
 jQuery(document).ready(function(){
 
+  jQuery('.previous').click(function(){
+    if (current_page!= 0)
+    {
+
+      var s = "http://localhost:3000/weapons?weapon_page="+(current_page-1);
+      window.location.href = s;
+    }
+    else {alert('Cant previous!');}
+  });
+
+
+  jQuery('.next').click(function(){
+    if (current_page!= pages_number)
+    {
+
+      var s = "http://localhost:3000/weapons?weapon_page="+(current_page+1);
+      window.location.href = s;
+    }
+    else {alert('Cant previous!');}
+  });
+
+
   jQuery('#zombie_info_btn').click(function(){
     jQuery('#zombie_info').modal('show');
   });
@@ -99,25 +121,22 @@ jQuery(".wear").click(function(){
           zombie_gold = parseInt(jQuery('#zombie_gold').html());
           support_price =parseInt(jQuery('#'+support_string + ' .support_price').html());
           jQuery('#zombie_gold').html(zombie_gold - support_price);
-          
 
           // update zombie attack
           zombie_attack = parseInt(jQuery('#zombie_attack').html());
           support_attack =parseInt(jQuery('#'+support_string + ' .support_attack').html());
           jQuery('#zombie_attack').html(zombie_attack + support_attack);
-          
 
           // update zombie speed
           zombie_speed = parseInt(jQuery('#zombie_speed').html());
           support_speed =parseInt(jQuery('#'+support_string + ' .support_speed').html());
           jQuery('#zombie_speed').html(zombie_speed + support_speed);
-          
 
           // update zombie defence
-          zombie_denfence = parseInt(jQuery('#zombie_denfence').html());
+          zombie_defence = parseInt(jQuery('#zombie_defence').html());
           support_defence =parseInt(jQuery('#'+support_string + ' .support_defence').html());
-          jQuery('#zombie_denfence').html(zombie_denfence + support_defence);
-          
+          jQuery('#zombie_defence').html(zombie_defence + support_defence);
+
         }
         else
         {
@@ -161,9 +180,10 @@ jQuery(".unwear").click(function(){
           jQuery('#zombie_speed').html(zombie_speed - support_speed);
 
           // update zombie defence
-          zombie_denfence = parseInt(jQuery('#zombie_denfence').html());
+          zombie_defence = parseInt(jQuery('#zombie_defence').html());
           support_defence =parseInt(jQuery('#'+support_string + ' .support_defence').html());
-          jQuery('#zombie_denfence').html(zombie_denfence - support_defence);
+          jQuery('#zombie_defence').html(zombie_defence - support_defence);
+          alert(zombie_defence +'support'+support_defence)
         }
         else
         {
@@ -242,7 +262,7 @@ jQuery(".unequip").click(function(){
      jQuery('#zombie_birthday').html(result.birthday);
     jQuery('#zombie_gold').html(result.gold) ;
     jQuery('#zombie_attack').html(result.attack) ;
-    jQuery('#zombie_denfence').html(result.defence);
+    jQuery('#zombie_defence').html(result.defence);
     jQuery('#zombie_speed').html(result.speed);
   }
 

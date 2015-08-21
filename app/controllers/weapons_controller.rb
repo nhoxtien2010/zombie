@@ -1,14 +1,19 @@
 class WeaponsController < ApplicationController
-
   before_filter :get_zombie
+
 
   def get_zombie
     @zombie = Zombie.find(session[:current_zombie])
   end
 
   def index
-    @weapons = Weapon.all
+    @number_weapons = params[:weapon_page].to_i || 0
+    sql = "select * from weapons offset #{@number_weapons * 8} limit 8"
+
+    @weapons = Weapon.find_by_sql(sql)
+    
     @zombie_weapons = @zombie.weapons
+    @pages_number = Weapon.all.length/8 + 1
 
     respond_to do |format|
       format.html

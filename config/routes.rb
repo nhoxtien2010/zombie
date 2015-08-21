@@ -16,7 +16,7 @@ TwitterForZombies::Application.routes.draw do
   post 'login/login' => 'login#login'
 
   root :to => 'login#index'
-  get 'weapons' => 'weapons#index'
+  get 'weapons' => 'weapons#index', :as => "weapons"
   get 'supports' => 'supports#index', :as => "supports"
   post 'weapons/buy' => 'weapons#buy', :as => 'buy_weapon'
   post 'weapons/unequip' => 'weapons#unequip', :as => 'unequip_weapon'

@@ -1,6 +1,6 @@
 <!-- show all weapons -->
-
-<h1 class="text-center">Listing Weapons</h1>
+<h1 class="text-center">Listing Weapons <%= @number_weapons%></h1>
+<h1> Page numbers<%= @pages_number%></h1>
 <table class="table weapons-table">
   <tr>
     <th>Name</th>
@@ -13,26 +13,41 @@
     <th></th>
   </tr>
   <% @weapons.each do |wp| %>
-    <tr id = "weapon_<%= wp.id%>" >
-      <td class = "weapon_name"><%= wp.name %></td>
-      <td class="weapon_price"><%= wp.price %></td>
-      <td class="weapon_attack"><%= wp.attack %></td>
-      <td class="weapon_speed"><%= wp.speed%></td>
-      <td class="weapon_range"><%= wp.range %></td>
-      <td class="weapon_type"><%= wp.weapon_type.name if wp.weapon_type%></td>
-      <td>
-        <button class="btn btn-primary buy" >Buy</button>
-        <button class="btn btn-warning unequip disabled" >Unequip</button>
-      </td>
-    </tr>
+  <tr id = "weapon_<%= wp.id%>" >
+    <td class = "weapon_name"><%= wp.name %></td>
+    <td class="weapon_price"><%= wp.price %></td>
+    <td class="weapon_attack"><%= wp.attack %></td>
+    <td class="weapon_speed"><%= wp.speed%></td>
+    <td class="weapon_range"><%= wp.range %></td>
+    <td class="weapon_type"><%= wp.weapon_type.name if wp.weapon_type%></td>
+    <td>
+      <button class="btn btn-primary buy" >Buy</button>
+      <button class="btn btn-warning unequip disabled" >Unequip</button>
+    </td>
+  </tr>
   <% end %>
-  </table>
-  <%= render 'zombie_info'%>
-  <br />
-  <%= javascript_tag do %>
-    <% @zombie_weapons.each do |wp|%>
-      jQuery('#weapon_<%= wp.id%>').css('color', 'red');
-      jQuery('#weapon_<%= wp.id%> .buy').addClass('disabled');
-      jQuery('#weapon_<%= wp.id%> .unequip').removeClass('disabled');
-    <% end%>
-  <% end %>
+
+  <nav>
+    <ul class="pagination">
+      <li ><a class="previous" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+
+      <% for i in 0..@pages_number %>
+        <li><%= link_to i.to_s, weapons_path(:weapon_page => i)%></li>
+      <% end %>
+      <li ><a class="next" aria-label="next"><span aria-hidden="true">»</span></a></li>
+    </ul>
+    </nav>
+
+  </nav>
+</table>
+<%= render 'zombie_info'%>
+<br />
+<%= javascript_tag do %>
+  var pages_number = <%= @pages_number %>
+  var current_page = <%= @number_weapons%>
+  <% @zombie_weapons.each do |wp|%>
+    jQuery('#weapon_<%= wp.id%>').css('color', 'red');
+    jQuery('#weapon_<%= wp.id%> .buy').addClass('disabled');
+    jQuery('#weapon_<%= wp.id%> .unequip').removeClass('disabled');
+  <% end%>
+<% end %>
