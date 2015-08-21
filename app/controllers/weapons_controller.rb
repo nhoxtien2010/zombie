@@ -13,7 +13,7 @@ class WeaponsController < ApplicationController
     @weapons = Weapon.find_by_sql(sql)
     
     @zombie_weapons = @zombie.weapons
-    @pages_number = Weapon.all.length/8 + 1
+    @pages_number = Weapon.all.length/8
 
     respond_to do |format|
       format.html

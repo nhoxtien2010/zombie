@@ -1,6 +1,5 @@
 <!-- show all weapons -->
 <h1 class="text-center">Listing Weapons <%= @number_weapons%></h1>
-<h1> Page numbers<%= @pages_number%></h1>
 <table class="table weapons-table">
   <tr>
     <th>Name</th>
@@ -32,7 +31,7 @@
       <li ><a class="previous" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
 
       <% for i in 0..@pages_number %>
-        <li><%= link_to i.to_s, weapons_path(:weapon_page => i)%></li>
+        <li><%= link_to (i+1).to_s, weapons_path(:weapon_page => i)%></li>
       <% end %>
       <li ><a class="next" aria-label="next"><span aria-hidden="true">»</span></a></li>
     </ul>
