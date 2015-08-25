@@ -25,6 +25,28 @@ jQuery(document).ready(function(){
     else {alert('Cant previous!');}
   });
 
+  jQuery('.previous1').click(function(){
+    if (current_page!= 0)
+    {
+
+      var s = "http://localhost:3000/supports?support_page="+(current_page-1);
+      window.location.href = s;
+    }
+    else {alert('Cant previous!');}
+  });
+
+
+  jQuery('.next1').click(function(){
+    if (current_page!= pages_number)
+    {
+
+      var s = "http://localhost:3000/supports?support_page="+(current_page+1);
+      window.location.href = s;
+    }
+    else {alert('Cant previous!');}
+  });
+
+
 
   jQuery('#zombie_info_btn').click(function(){
     jQuery('#zombie_info').modal('show');

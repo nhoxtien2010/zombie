@@ -1,24 +1,45 @@
 class WeaponsController < ApplicationController
-  before_filter :get_zombie
-
 
   def get_zombie
     @zombie = Zombie.find(session[:current_zombie])
   end
 
   def index
-    @number_weapons = params[:weapon_page].to_i || 0
-    sql = "select * from weapons offset #{@number_weapons * 8} limit 8"
+  end
 
-    @weapons = Weapon.find_by_sql(sql)
-    
-    @zombie_weapons = @zombie.weapons
-    @pages_number = Weapon.all.length/8
+  def data
+    render :json => { "data" => {"title" => "abc"}}
+  end
 
-    respond_to do |format|
-      format.html
+  def get_index
+    @zombie =Zombie.find(1)
+    weapons = Weapon.all
+    zombie_weapons = @zombie.weapons
+    pages_number = Weapon.all.length/8
+
+    result = []
+    p weapons
+    weapons.each do |wp|
+      name = wp.weapon_type ? wp.weapon_type.name : ""
+      rs = {'id'=> wp.id,
+      'name'=> wp.name,
+      'price' => wp.price,
+      'attack'=>wp.attack,
+      'speed'=>wp.speed,
+      'range'=> wp.range,
+      'weapon_type'=> name}
+      if zombie_weapons.include?wp
+        rs['equip']=true
+      else
+        rs['equip']=false
+      end
+      result<< rs
+
     end
 
+    respond_to do |format|
+      format.json {render :json => {"weapons" => result}}
+    end
 
   end
 

@@ -9,7 +9,12 @@ class SupportsController < ApplicationController
 
 
   def index
-    @supports = Support.all
+    @pages_number = Support.all.length/8
+    @supports_number = params[:support_page].to_i||0
+    sql = "select * from supports offset #{@supports_number * 8} limit 8"
+
+
+    @supports = Support.find_by_sql(sql)
     @zombie_supports = @zombie.supports
     respond_to do |format|
       format.html

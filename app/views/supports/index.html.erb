@@ -1,5 +1,16 @@
 <!-- show all supports -->
 
+<nav>
+  <ul class="pagination">
+    <li ><a class="previous1" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+
+    <% for i in 0..@pages_number %>
+      <li><%= link_to (i+1).to_s, supports_path(:support_page => i)%></li>
+    <% end %>
+    <li ><a class="next1" aria-label="next"><span aria-hidden="true">»</span></a></li>
+  </ul>
+</nav>
+
 <h1 class="text-center">Listing Supports</h1>
 <table class="table weapons-table">
   <tr>
@@ -29,6 +40,8 @@
   <br />
 
 <%= javascript_tag do -%>
+  var pages_number = <%= @pages_number %>
+  var current_page = <%= @supports_number%>
   <% @zombie_supports.each do |sp|%>
     jQuery('#support_<%= sp.id%>').css('color', 'red');
     jQuery('#support_<%= sp.id%> .wear').addClass('disabled');

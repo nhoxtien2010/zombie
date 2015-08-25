@@ -9,14 +9,15 @@ TwitterForZombies::Application.routes.draw do
     resources :tweets
     get :decomp, :on => :member
   end
+
+  match 'get_index' => 'weapons#get_index'
+
   post 'zombies/random_zombie' => 'zombies#random_zombie'
-
   post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
-
   post 'login/login' => 'login#login'
-
   root :to => 'login#index'
   get 'weapons' => 'weapons#index', :as => "weapons"
+  
   get 'supports' => 'supports#index', :as => "supports"
   post 'weapons/buy' => 'weapons#buy', :as => 'buy_weapon'
   post 'weapons/unequip' => 'weapons#unequip', :as => 'unequip_weapon'
