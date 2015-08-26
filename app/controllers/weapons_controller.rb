@@ -1,4 +1,61 @@
+require 'rubygems'
+require 'json'
+
 class WeaponsController < ApplicationController
+# //////////////////proxy///////////////////////
+
+  def create
+    hash = JSON.parse(params["weapons"])
+    weapon = Weapon.new
+    weapon.name = hash["name"]
+    weapon.price = hash["price"]
+    weapon.attack = hash["attack"]
+    weapon.speed = hash["speed"]
+    weapon.range = hash["range"]
+    weapon.weapon_type = WeaponType.where(:name=> hash["weapon_type"]).first if  WeaponType.where(:name=> hash["weapon_type"]).first
+    weapon.save
+    render :json => {"success" => true, "message" => "Created new weapon", "data"=> weapon}
+  end
+
+  def update
+    hash = JSON.parse(params["weapons"])
+    weapon = Weapon.find(hash["id"])
+    weapon.name = hash["name"] if hash["name"]
+    weapon.price = hash["price"] if hash["price"]
+    weapon.attack = hash["attack"] if hash["attack"]
+    weapon.speed = hash["speed"] if hash["speed"]
+    weapon.range = hash["range"] if hash["range"]
+    weapon.weapon_type = WeaponType.where(:name=> hash["weapon_type"]).first if  WeaponType.where(:name=> hash["weapon_type"]).first
+    weapon.save
+    render :json => {"success" => true, "message"=> "Update successfully", "data" => weapon}
+  end
+
+  def destroy
+    id = params[:weapons].to_i
+    p "--------------------------------------------------------------------"
+    p id
+    p "--------------------------------------------------------------------"
+
+    Weapon.find(id).delete
+    render :json => {"success" => true, "message" => "Destroy weapon #{id}"}
+
+  end
+
+  def getWpType
+    weaponTypes = WeaponType.all
+    arrWpType = []
+    weaponTypes.each do |wpType|
+      wt = {"id"=> wpType.id, "name"=> wpType.name}
+      arrWpType << wt
+    end
+
+    p arrWpType
+    respond_to do |format|
+      format.json {render :json =>{"wpType"=> arrWpType, "total"=> weaponTypes.length }}
+    end
+  end
+
+  # /////////////////////////////////////////
 
   def get_zombie
     @zombie = Zombie.find(session[:current_zombie])
@@ -13,12 +70,11 @@ class WeaponsController < ApplicationController
 
   def get_index
     @zombie =Zombie.find(1)
-    weapons = Weapon.all
+    weapons = Weapon.order(:id).offset(params[:start]).limit(params[:limit])
     zombie_weapons = @zombie.weapons
-    pages_number = Weapon.all.length/8
+    total = Weapon.all.length
 
     result = []
-    p weapons
     weapons.each do |wp|
       name = wp.weapon_type ? wp.weapon_type.name : ""
       rs = {'id'=> wp.id,
@@ -36,9 +92,13 @@ class WeaponsController < ApplicationController
       result<< rs
 
     end
+    p "-------------------------------------------------------------------------------"
+
+    p result
+    p "-------------------------------------------------------------------------------"
 
     respond_to do |format|
-      format.json {render :json => {"weapons" => result}}
+      format.json {render :json => {"weapons" => result, "total"=> total}}
     end
 
   end

@@ -1,6 +1,13 @@
 TwitterForZombies::Application.routes.draw do
 
 
+match 'get_weapon_type' => 'weapons#getWpType'
+
+# proxy weapons
+post 'weapons/read' => "weapons#get_index"
+post 'weapons/create' => "weapons#create"
+post 'weapons/update' => "weapons#update"
+post 'weapons/destroy' => "weapons#destroy"
 
 
   resources :brains
@@ -11,6 +18,7 @@ TwitterForZombies::Application.routes.draw do
   end
 
   match 'get_index' => 'weapons#get_index'
+
 
   post 'zombies/random_zombie' => 'zombies#random_zombie'
   post 'zombies/new'=> 'zombies#zombie_new', :as => 'zombie_new_po'
