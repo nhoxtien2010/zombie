@@ -9,6 +9,11 @@ post 'weapons/create' => "weapons#create"
 post 'weapons/update' => "weapons#update"
 post 'weapons/destroy' => "weapons#destroy"
 
+match 'get_zombie_info' => "weapons#get_zombie_info"
+
+# proxy support
+match 'get_support' => "supports#get_support"
+
 
   resources :brains
 

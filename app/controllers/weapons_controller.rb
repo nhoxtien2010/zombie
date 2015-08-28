@@ -2,42 +2,98 @@ require 'rubygems'
 require 'json'
 
 class WeaponsController < ApplicationController
+
+  before_filter :get_zombie
 # //////////////////proxy///////////////////////
 
   def create
-    hash = JSON.parse(params["weapons"])
-    weapon = Weapon.new
-    weapon.name = hash["name"]
-    weapon.price = hash["price"]
-    weapon.attack = hash["attack"]
-    weapon.speed = hash["speed"]
-    weapon.range = hash["range"]
-    weapon.weapon_type = WeaponType.where(:name=> hash["weapon_type"]).first if  WeaponType.where(:name=> hash["weapon_type"]).first
-    weapon.save
-    render :json => {"success" => true, "message" => "Created new weapon", "data"=> weapon}
+
+    weapons = []
+
+    a= JSON.parse(params["weapons"])
+    hash = a.kind_of?(Array)? a : ([]<<a)
+    hash.each do |item|
+      weapon = Weapon.new
+      weapon.name = item["name"]
+      weapon.price = item["price"]
+      weapon.attack = item["attack"]
+      weapon.speed = item["speed"]
+      weapon.range = item["range"]
+      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first if  WeaponType.where(:name=> item["weapon_type"]).first
+      if item["equip"] == true and @zombie.gold > weapon.price
+
+          equip = Equip.new
+          equip.zombie = @zombie
+          equip.weapon = weapon
+          equip.save
+          @zombie.gold = @zombie.gold - item["price"].to_i
+          @zombie.attack = @zombie.attack + item["attack"].to_i
+          @zombie.speed = @zombie.speed + item["speed"].to_i
+          @zombie.save
+      end
+
+      weapon.save
+      weapons << weapon
+    end
+
+    render :json => {"success" => true, "message" => "Create all weapons successfully!", "weapons"=> weapons}
   end
 
   def update
-    hash = JSON.parse(params["weapons"])
-    weapon = Weapon.find(hash["id"])
-    weapon.name = hash["name"] if hash["name"]
-    weapon.price = hash["price"] if hash["price"]
-    weapon.attack = hash["attack"] if hash["attack"]
-    weapon.speed = hash["speed"] if hash["speed"]
-    weapon.range = hash["range"] if hash["range"]
-    weapon.weapon_type = WeaponType.where(:name=> hash["weapon_type"]).first if  WeaponType.where(:name=> hash["weapon_type"]).first
-    weapon.save
-    render :json => {"success" => true, "message"=> "Update successfully", "data" => weapon}
+    a= JSON.parse(params["weapons"])
+    hash = a.kind_of?(Array)? a : ([]<<a)
+
+    weapons = []
+
+    # save all hash is a array
+    hash.each do |item|
+      weapon = Weapon.find(item["id"])
+      weapon.name = item["name"] if item["name"]
+      weapon.price = item["price"] if item["price"]
+      weapon.attack = item["attack"] if item["attack"]
+      weapon.speed = item["speed"] if item["speed"]
+      weapon.range = item["range"] if item["range"]
+      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first if  WeaponType.where(:name=> item["weapon_type"]).first
+      if item["equip"] == true
+        price = weapon.price
+
+        if @zombie.gold > price
+
+          equip = Equip.new
+          equip.zombie = @zombie
+          equip.weapon = weapon
+          equip.save
+
+          @zombie.gold = @zombie.gold - item["price"].to_i
+          @zombie.attack = @zombie.attack + item["attack"].to_i
+          @zombie.speed = @zombie.speed + item["speed"].to_i
+          @zombie.save
+        end
+
+      else item["equip"] == false
+          @zombie.attack = @zombie.attack - item["attack"].to_i
+          @zombie.speed = @zombie.speed - item["speed"].to_i
+          @zombie.save
+      end
+      weapon.save
+      weapons << weapon
+    end
+    render :json => {"success" => true, "message"=> "Update successfully!", "weapons" => weapons}
   end
 
   def destroy
-    id = params[:weapons].to_i
-    p "--------------------------------------------------------------------"
-    p id
-    p "--------------------------------------------------------------------"
+    if params["weapons"].include? ","
+      hash = JSON.parse(params["weapons"])
+    else
+      hash = params["weapons"].to_i.to_a
+    end
 
-    Weapon.find(id).delete
-    render :json => {"success" => true, "message" => "Destroy weapon #{id}"}
+    message = "Destroy weapons: "
+    hash.each do |id|
+      Weapon.find(id).delete
+      message = message + id.to_s+", "
+    end
+    render :json => {"success" => true, "message" => message}
 
   end
 
@@ -55,10 +111,21 @@ class WeaponsController < ApplicationController
     end
   end
 
-  # /////////////////////////////////////////
+  # ///////////////////////////////////////////////////////////////////////
 
   def get_zombie
-    @zombie = Zombie.find(session[:current_zombie])
+    @zombie = Zombie.all.first
+  end
+  def get_zombie_info
+    name = {"atrribute"=> "Name", "value"=> @zombie.name}
+    bio = {"atrribute"=> "Bio", "value"=> @zombie.bio}
+    gold = {"atrribute"=> "Gold", "value"=> @zombie.gold}
+    birthday = {"atrribute"=> "Birthday", "value"=> @zombie.birthday}
+    attack = {"atrribute"=> "Attack", "value"=> @zombie.attack}
+    defence = {"atrribute"=> "Defence", "value"=> @zombie.defence}
+    speed = {"atrribute"=> "Speed", "value"=> @zombie.speed}
+    id = {"atrribute"=> "id", "value" => @zombie.id}
+    render :json =>{"zombie"=>[id,name,bio,gold,birthday,attack,defence,speed]}
   end
 
   def index
@@ -69,7 +136,6 @@ class WeaponsController < ApplicationController
   end
 
   def get_index
-    @zombie =Zombie.find(1)
     weapons = Weapon.order(:id).offset(params[:start]).limit(params[:limit])
     zombie_weapons = @zombie.weapons
     total = Weapon.all.length
@@ -92,11 +158,6 @@ class WeaponsController < ApplicationController
       result<< rs
 
     end
-    p "-------------------------------------------------------------------------------"
-
-    p result
-    p "-------------------------------------------------------------------------------"
-
     respond_to do |format|
       format.json {render :json => {"weapons" => result, "total"=> total}}
     end

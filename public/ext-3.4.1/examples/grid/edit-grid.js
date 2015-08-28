@@ -82,11 +82,6 @@ Ext.onReady(function(){
                 disabledDays: [0, 6],
                 disabledDaysText: 'Plants are not available on the weekends'
             })
-        }, {
-            xtype: 'checkcolumn',
-            header: 'Indoor?',
-            dataIndex: 'indoor',
-            width: 55
         }]
     });
 

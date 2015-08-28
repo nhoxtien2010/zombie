@@ -1,10 +1,42 @@
 class SupportsController < ApplicationController
 
+  def get_support
+    @zombie = Zombie.find(2)
 
-  before_filter :get_zombie
+    supports = Support.order(:id).offset(params[:start]).limit(params[:limit])
+    zombie_supports = @zombie.supports
+    total = Support.all.length
+
+    result = []
+    supports.each do |sp|
+      rs = {
+        'id'=> sp.id,
+        'name'=> sp.name,
+        'price' => sp.price,
+        'attack'=>sp.attack,
+        'speed'=>sp.speed,
+        'defence'=> sp.defence
+      }
+      if zombie_supports.include?sp
+        rs['equip']=true
+      else
+        rs['equip']=false
+      end
+      result<< rs
+    end
+
+
+    respond_to do |format|
+      format.json {render :json => {"supports" => result, "total"=> total}}
+    end
+
+  end
+
+
+
 
   def get_zombie
-    @zombie = Zombie.find(session[:current_zombie])
+    @zombie = Zombie.find(2)
   end
 
 
