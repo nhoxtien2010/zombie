@@ -84,14 +84,14 @@ Ext.onReady(function() {
 
   var fm = Ext.form;
 
-  var ds = new Ext.data.JsonStore({
+  var weaponType = new Ext.data.JsonStore({
     url: '/get_weapon_type',
     root: 'wpType',
     idPropertive: 'id',
     fields: ['id', 'name']
   });
 
-  ds.load();
+  weaponType.load();
 
   var weaponColumns = [{
       header: "ID",
@@ -101,59 +101,31 @@ Ext.onReady(function() {
     }, {
       header: "Name",
       sortable: true,
-      dataIndex: 'name',
-      editor: new fm.TextField({})
+      dataIndex: 'name'
     }, {
       header: "Price",
       sortable: true,
-      dataIndex: 'price',
-      editor: new fm.NumberField({
-        allowBlank: false,
-        allowNegative: false,
-        maxValue: 1000
-      })
+      dataIndex: 'price'
     }, {
       header: "Attack",
       sortable: true,
-      dataIndex: 'attack',
-      editor: new fm.NumberField({
-        allowBlank: false,
-        allowNegative: false,
-        maxValue: 1000
-      })
+      dataIndex: 'attack'
     }, {
       header: "Speed",
       sortable: true,
-      dataIndex: 'speed',
-      editor: new fm.NumberField({
-        allowBlank: false,
-        allowNegative: false,
-        maxValue: 1000
-      })
+      dataIndex: 'speed'
     }, {
       header: "Range",
       sortable: true,
-      dataIndex: 'range',
-      editor: new fm.NumberField({
-        allowBlank: false,
-        allowNegative: false,
-        maxValue: 1000
-      })
+      dataIndex: 'range'
     }, {
       header: "Weapon_type",
       sortable: true,
-      dataIndex: 'weapon_type',
-      editor: new fm.ComboBox({
-        store: ds,
-        displayField: 'name',
-        triggerAction: "all",
-        typeAhead: true
-      })
+      dataIndex: 'weapon_type'
     }, {
       header: 'Equip?',
       xtype: 'checkcolumn',
-      dataIndex: 'equip',
-      editor: new Ext.form.Checkbox({})
+      dataIndex: 'equip'
     }
 
   ];
@@ -164,11 +136,11 @@ Ext.onReady(function() {
     saveText: 'Update'
   });
 
+  var weapon_rec;
+
   // create a typical Gridpanel with RowEditor plugin
   var weaponGrid = new Ext.grid.EditorGridPanel({
     // renderTo: 'listing-weapons',
-    columnWidth: .7,
-    iconCls: 'icon-grid',
     frame: true,
     title: 'Listing weapons',
     height: 300,
@@ -177,12 +149,11 @@ Ext.onReady(function() {
       singleSelect: true,
       listeners: {
         rowselect: function(sm, row, rec) {
-          Ext.getCmp("weapon-form").getForm().loadRecord(rec);
+          weapon_rec = rec;
         }
       }
     }),
 
-    // plugins: [editor],
     columns: weaponColumns,
     tbar: [{
       text: 'Add',
@@ -200,7 +171,11 @@ Ext.onReady(function() {
       text: 'Zombie show',
       iconCls: 'silk-user',
       handler: onShowZombie
-    }, '-'],
+    }, '-', {
+      text: 'Edit',
+      iconCls: 'silk-table-edit ',
+      handler: onEdit
+    }],
     bbar: new Ext.PagingToolbar({
       pageSize: 25,
       store: store,
@@ -208,25 +183,7 @@ Ext.onReady(function() {
       totalProperty: 'total',
       displayMsg: 'Displaying weapons {0} - {1} of {2}',
       emptyMsg: "No weapons to display",
-      items: [
-        '-', {
-          pressed: true,
-          enableToggle: true,
-          text: 'Show Preview',
-          cls: 'x-btn-text-icon details',
-          toggleHandler: function(btn, pressed) {
-            var view = grid.getView();
-            view.showPreview = pressed;
-            view.refresh();
-          }
-        }, {
-          text: 'Save all',
-          cls: 'x-btn-text-icon details',
-          handler: function(btn, pressed) {
-            weaponGrid.getStore().save();
-          }
-        }
-      ]
+
     }),
     listeners: {
       viewready: function(g) {
@@ -237,24 +194,71 @@ Ext.onReady(function() {
       forceFit: true
     }
   });
-  // onAdd
 
+
+  // =============================onAdd=========================
+
+  // create weapon record
+  weapon_record = new Ext.data.Record.create([{
+    name: "id",
+    type: "integer"
+  }, {
+    name: "name",
+    type: "string"
+  }, {
+    name: "bio",
+    type: "string"
+  }, {
+    name: "attack",
+    type: "integer"
+  }, {
+    name: "speed",
+    type: "integer"
+  }, {
+    name: "defence",
+    type: "integer"
+  }, {
+    name: "birthday",
+    type: "date"
+  }, {
+    name: "gold",
+    type: "integer"
+  }]);
 
   function onAdd(btn, ev) {
-    var u = new weaponGrid.store.recordType({
-      'name': '',
-      'attack': '',
-      'speed': '',
-      'range': '',
-      'price': '',
-      'weapon_type': '',
-      'equip': ''
-    });
+    new_record = new weapon_record();
+    if (!weapon_window) {
+      weapon_window = new WeaponWindow({
+        id: "weapon_window",
+        buildSave: function() {
+          if (edit_weapon_value == false) {
+            Ext.MessageBox.alert('Warning', 'Nothing to saved!');
+          } else {
+            // form = Ext.getCmp("weapon_form").getForm()
+            form = weapon_window.myForm;
+            values = form.getValues();
 
-    editor.stopEditing();
-    weaponGrid.store.insert(0, u);
-    editor.startEditing(0, 1);
+            new_record.set('name', values["name"]);
+            new_record.set('price', values["price"]);
+            new_record.set('attack', values["attack"]);
+            new_record.set('speed', values["speed"]);
+            new_record.set('range', values["range"]);
+            new_record.set('weapon_type', values["weapon_type"]);
+            new_record.set('equip', values["equip"]);
+
+            weaponGrid.getStore().insert(0, new_record);
+            weaponGrid.getStore().save();
+            edit_weapon_value = false;
+          }
+        },
+      });
+    }
+    new_record = new weapon_record();
+    weapon_window.myForm.getForm().loadRecord(new_record);
+    weapon_window.myForm.getForm().reset();
+    weapon_window.show(this);
   }
+
 
   // onDelete
   function onDelete() {
@@ -265,96 +269,122 @@ Ext.onReady(function() {
     weaponGrid.store.remove(rec);
   }
 
-  var win;
+
+  var zombie_window
+  var weapon_window;
   var zombie_info = new Ext.data.JsonStore({
     url: '/get_zombie_info',
     root: 'zombie',
-    fields: ['atrribute', 'value']
+    fields: ['id', 'name', 'birthday', 'gold', 'attack', 'defence', 'bio']
   });
 
+
+
+  // zombie show to show zombie information in zombie_window
+  var zombie_form = new Ext.FormPanel({
+    labelWidth: 75,
+    layout: 'form',
+    frame: true,
+    title: 'Zombie information',
+    defaultType: 'textfield',
+
+    items: [{
+      fieldLabel: 'ID',
+      name: 'id',
+      disabled: true,
+    }, {
+      fieldLabel: 'Name',
+      name: 'name',
+    }, {
+      fieldLabel: 'Birthday',
+      name: 'birthday',
+    }, {
+      fieldLabel: 'Gold',
+      name: 'gold'
+    }, {
+      fieldLabel: 'Attack',
+      name: 'attack'
+    }, {
+      fieldLabel: 'Defence',
+      name: 'defence',
+    }, {
+      fieldLabel: 'Bio',
+      name: 'bio'
+    }]
+  });
+
+  // onshow zombie zombie_window
+  zombie_info.load();
+
   function onShowZombie() {
-
-
-    zombie_info.load();
-
-     var zombie_form = new Ext.FormPanel({
-        labelWidth: 75, // label settings here cascade unless overridden
-        frame:true,
-        title: 'Zombie Infomation',
-        bodyStyle:'padding:5px 5px 0',
-        width: 350,
-        defaults: {width: 230},
-        defaultType: 'textfield',
-
-        items: [{
-                fieldLabel: 'Name',
-                name: 'name',
-                allowBlank:false
-            },{
-                fieldLabel: 'Bio',
-                name: 'bio'
-            },{
-                fieldLabel: 'Gold',
-                name: 'gold'
-            }, {
-                fieldLabel: 'Birthday',
-                name: 'birthday',
-            }, {
-                fieldLabel: 'Attack',
-                name: 'attack',
-            }, {
-                fieldLabel: 'Defence',
-                name: 'defence',
-            }, {
-                fieldLabel: 'Speed',
-                name: 'speed',
-            }
-        ],
-
+    if (!zombie_window) {
+      zombie_window = new Ext.Window({
+        renderTo: Ext.getBody(),
+        width: 500,
+        height: 300,
+        closeAction: 'hide',
+        layout: 'fit',
+        plain: true,
         buttons: [{
-            text: 'Save'
-        },{
-            text: 'Cancel'
-        }]
-    });
+          text: 'Close',
+          handler: function() {
+            zombie_window.hide();
+          }
+        }],
+        items: [zombie_form]
+      });
+    }
+
+    zombie_form.getForm().loadRecord(zombie_info.getAt(0));
+    zombie_window.show(this);
+  }
 
 
-    var grid = new Ext.grid.EditorGridPanel({
-      region: 'center',
-      title: 'Zombie infomation',
-      height: 300,
-      store: zombie_info,
-      columns: [{
-        header: "Attribute",
-        sortable: true,
-        dataIndex: 'atrribute'
-      }, {
-        header: "Value",
-        sortable: true,
-        dataIndex: 'value'
-      }]
-    });
-    // create the window on the first click and reuse on subsequent clicks
-    win = new Ext.Window({
-      renderTo: Ext.getBody(),
-      width: 500,
-      height: 300,
-      closeAction: 'hide',
-      layout: 'border',
-      plain: true,
-      buttons: [{
-        text: 'Close',
-        handler: function() {
-          win.hide();
-        }
-      }],
-      items: [grid]
-    });
-    win.show(this);
-  };
+  function onEdit() {
+    if (typeof weapon_rec === 'undefined') {
+      Ext.MessageBox.alert('Warning', 'Please select Record Weapon to edit first!!');
+    } else {
+      if (!weapon_window) {
+        weapon_form = new WeaponForm({
+          weaponType: weaponType
+        });
+        weapon_window = new Ext.user.weapon_window({
+          function() {
+            if (edit_weapon_value == false) {
+              Ext.MessageBox.alert('Warning', 'Nothing to saved!');
+            } else {
+              form = Ext.getCmp("weapon_form").getForm()
+              values = form.getValues();
+
+              weapon_rec.set('name', values["name"]);
+              weapon_rec.set('price', values["price"]);
+              weapon_rec.set('attack', values["attack"]);
+              weapon_rec.set('speed', values["speed"]);
+              weapon_rec.set('range', values["range"]);
+              weapon_rec.set('weapon_type', values["weapon_type"]);
+              weapon_rec.set('equip', values["equip"]);
+
+              weaponGrid.getStore().insert(0, new_record);
+              weaponGrid.getStore().save();
+              edit_weapon_value = false;
+            }
+          },
+          buildItems: [weapon_form]
+        });
+        weapon_form.getForm().loadRecord(weapon_rec);
+        weapon_window.show(this);
+      }
+    }
+  }
+
+  var edit_weapon_value = false;
+  var new_record;
+  var weapon_form;
+
 
 
   // panel for support
+  // =================================================================================================
   var supports = new Ext.data.JsonStore({
     url: '/get_support',
     root: 'supports',
@@ -483,83 +513,12 @@ Ext.onReady(function() {
   });
 
   var gridForm = new Ext.FormPanel({
-    id: 'weapon-form',
     frame: true,
     title: 'Weapon data',
     bodyStyle: 'padding:5px',
     width: 600,
     layout: 'column',
-    items: [ 
-      weaponGrid,
-    {
-      columnWidth: .3,
-      xtype: 'fieldset',
-      labelWidth: 90,
-      title: 'Weapon details',
-      layout: 'form',
-      defaults: {
-        width: 200,
-        border: false
-      },
-      defaultType: 'textfield',
-      autoHeight: true,
-      bodyStyle: Ext.isIE ? 'padding:0 0 5px 15px;' : 'padding:10px 15px;',
-      border: false,
-      style: {
-        "margin-left": "10px",
-        "margin-right": Ext.isIE6 ? (Ext.isStrict ? "-10px" : "-13px") : "0"
-      },
-      items: [{
-        fieldLabel: 'ID',
-        name: 'id'
-      }, {
-        fieldLabel: 'Name',
-        name: 'name'
-      }, {
-        fieldLabel: 'Price',
-        name: 'price'
-      }, {
-        fieldLabel: 'Attack',
-        name: 'attack'
-      }, {
-        fieldLabel: 'Speed',
-        name: 'speed'
-      }, {
-        fieldLabel: 'Range',
-        name: 'range'
-      }, {
-        fieldLabel: 'Weapon type',
-        name: 'weapon_type'
-      }, {
-        fieldLabel: 'Equip',
-        name: 'equip'
-      }],
-      buttons: [{
-        text: 'Save',
-        handler: function(){
-          // record = this.getRecord();     // get the form record
-          form = Ext.getCmp("weapon-form").getForm()
-          values = form.getValues();
-
-          var rec = weaponGrid.getStore().getById(values["id"]);
-          console.log(rec);
-          rec.set('name', values["name"]);
-          rec.set('price', values["price"]);
-          rec.set('attack', values["attack"]);
-          rec.set('speed', values["speed"]);
-          rec.set('range', values["range"]);
-          rec.set('weapon_type', values["weapon_type"]);
-          rec.set('equip', values["equip"]);
-
-          rec.commit();
-          rs = [];
-          rs << rec;
-          weaponGrid.getStore().doTransaction('update',rs, true);
-
-
-        }
-      }]
-    }]
+    items: [weaponGrid]
   });
 
   var tabs = new Ext.TabPanel({
@@ -574,7 +533,4 @@ Ext.onReady(function() {
       supportsGrid
     ]
   });
-
-
-
-});
+})

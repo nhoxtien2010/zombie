@@ -42,12 +42,15 @@ class WeaponsController < ApplicationController
   def update
     a= JSON.parse(params["weapons"])
     hash = a.kind_of?(Array)? a : ([]<<a)
+    result = "Update "
 
     weapons = []
 
     # save all hash is a array
     hash.each do |item|
+      
       weapon = Weapon.find(item["id"])
+      result = result+ weapon.id.to_s + ", "
       weapon.name = item["name"] if item["name"]
       weapon.price = item["price"] if item["price"]
       weapon.attack = item["attack"] if item["attack"]
@@ -78,7 +81,7 @@ class WeaponsController < ApplicationController
       weapon.save
       weapons << weapon
     end
-    render :json => {"success" => true, "message"=> "Update successfully!", "weapons" => weapons}
+    render :json => {"success" => true, "message"=> result, "weapons" => weapons}
   end
 
   def destroy
@@ -117,15 +120,14 @@ class WeaponsController < ApplicationController
     @zombie = Zombie.all.first
   end
   def get_zombie_info
-    name = {"atrribute"=> "Name", "value"=> @zombie.name}
-    bio = {"atrribute"=> "Bio", "value"=> @zombie.bio}
-    gold = {"atrribute"=> "Gold", "value"=> @zombie.gold}
-    birthday = {"atrribute"=> "Birthday", "value"=> @zombie.birthday}
-    attack = {"atrribute"=> "Attack", "value"=> @zombie.attack}
-    defence = {"atrribute"=> "Defence", "value"=> @zombie.defence}
-    speed = {"atrribute"=> "Speed", "value"=> @zombie.speed}
-    id = {"atrribute"=> "id", "value" => @zombie.id}
-    render :json =>{"zombie"=>[id,name,bio,gold,birthday,attack,defence,speed]}
+    rs = {'id'=> @zombie.id,
+      'name'=> @zombie.name,
+      'gold' => @zombie.gold,
+      'attack'=>@zombie.attack,
+      'speed'=>@zombie.speed,
+      'birthday'=>@zombie.birthday,
+      'defence'=> @zombie.defence}
+    render :json =>{"zombie"=>[rs]}
   end
 
   def index
