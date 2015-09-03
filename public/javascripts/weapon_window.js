@@ -1,6 +1,4 @@
-Ext.ns("TienNguyen");
-
-TienNguyen.WeaponWindow = Ext.extend(Ext.Window, {
+WeaponWindow = Ext.extend(Ext.Window, {
   renderTo: Ext.getBody(),
   width: 500,
   height: 350,
@@ -8,20 +6,23 @@ TienNguyen.WeaponWindow = Ext.extend(Ext.Window, {
   layout: 'fit',
   plain: true,
   initComponent: function(){
+    var myWindow = this;
+
     this.buttons = [{
       text: 'Cancel',
-      handler: function() {
-        this.hide();
+      handler: function(){
+        myWindow.hide();
       }
     },{
       text: 'Save',
       handler: this.buildSave
     }];
-
-    this.myForm = new WeaponForm();
-
     this.items = [this.myForm];
     WeaponWindow.superclass.initComponent.call(this);
   },
   buildSave: function(){}
-})
+});
+
+
+// register xtype to class WeaponWindow
+Ext.reg('weaponWindow', WeaponWindow);

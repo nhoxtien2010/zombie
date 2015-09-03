@@ -19,7 +19,9 @@ class WeaponsController < ApplicationController
       weapon.attack = item["attack"]
       weapon.speed = item["speed"]
       weapon.range = item["range"]
-      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first if  WeaponType.where(:name=> item["weapon_type"]).first
+      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first
+
+      zombie_equip = false
       if item["equip"] == true and @zombie.gold > weapon.price
 
           equip = Equip.new
@@ -30,10 +32,24 @@ class WeaponsController < ApplicationController
           @zombie.attack = @zombie.attack + item["attack"].to_i
           @zombie.speed = @zombie.speed + item["speed"].to_i
           @zombie.save
+          zombie_equip = true
       end
 
       weapon.save
-      weapons << weapon
+      name = weapon.weapon_type ? weapon.weapon_type.name : ""
+      rs = {'id'=> weapon.id,
+      'name'=> weapon.name,
+      'price' => weapon.price,
+      'attack'=>weapon.attack,
+      'speed'=>weapon.speed,
+      'range'=> weapon.range,
+      'weapon_type'=> name}
+      if zombie_equip
+        rs['equip']=true
+      else
+        rs['equip']=false
+      end
+      weapons << rs
     end
 
     render :json => {"success" => true, "message" => "Create all weapons successfully!", "weapons"=> weapons}
@@ -43,12 +59,10 @@ class WeaponsController < ApplicationController
     a= JSON.parse(params["weapons"])
     hash = a.kind_of?(Array)? a : ([]<<a)
     result = "Update "
-
     weapons = []
 
     # save all hash is a array
     hash.each do |item|
-      
       weapon = Weapon.find(item["id"])
       result = result+ weapon.id.to_s + ", "
       weapon.name = item["name"] if item["name"]
@@ -56,10 +70,12 @@ class WeaponsController < ApplicationController
       weapon.attack = item["attack"] if item["attack"]
       weapon.speed = item["speed"] if item["speed"]
       weapon.range = item["range"] if item["range"]
-      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first if  WeaponType.where(:name=> item["weapon_type"]).first
+      weapon.weapon_type = WeaponType.where(:name=> item["weapon_type"]).first
+      zombie_equip = false
+
+
       if item["equip"] == true
         price = weapon.price
-
         if @zombie.gold > price
 
           equip = Equip.new
@@ -71,6 +87,8 @@ class WeaponsController < ApplicationController
           @zombie.attack = @zombie.attack + item["attack"].to_i
           @zombie.speed = @zombie.speed + item["speed"].to_i
           @zombie.save
+        else
+          result += "But you not have enough gold to buy this weapon!"
         end
 
       else item["equip"] == false
@@ -79,7 +97,22 @@ class WeaponsController < ApplicationController
           @zombie.save
       end
       weapon.save
-      weapons << weapon
+      zombie_equip = true if @zombie.equips.include?weapon
+      name = weapon.weapon_type ? weapon.weapon_type.name : ""
+      rs = {'id'=> weapon.id,
+      'name'=> weapon.name,
+      'price' => weapon.price,
+      'attack'=>weapon.attack,
+      'speed'=>weapon.speed,
+      'range'=> weapon.range,
+      'weapon_type'=> name}
+      if zombie_equip
+        rs['equip']=true
+      else
+        rs['equip']=false
+      end
+
+      weapons << rs
     end
     render :json => {"success" => true, "message"=> result, "weapons" => weapons}
   end
@@ -128,13 +161,6 @@ class WeaponsController < ApplicationController
       'birthday'=>@zombie.birthday,
       'defence'=> @zombie.defence}
     render :json =>{"zombie"=>[rs]}
-  end
-
-  def index
-  end
-
-  def data
-    render :json => { "data" => {"title" => "abc"}}
   end
 
   def get_index

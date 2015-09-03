@@ -1,19 +1,10 @@
 
-WeaponForm = Ext.extend(Ext.form.FormPanel, {
+SupportForm = Ext.extend(Ext.form.FormPanel, {
   layout: 'form',
   change_form: false,
   initComponent: function(){
-
-    this.weaponType = new Ext.data.JsonStore({
-      autoLoad: true,
-      url: '/get_weapon_type',
-      root: 'wpType',
-      idPropertive: 'id',
-      fields: ['id', 'name']
-    });
     this.items = this.buildItems();
-
-    WeaponForm.superclass.initComponent.call(this);
+    SupportForm.superclass.initComponent.call(this);
   },
 
   buildItems: function(){
@@ -21,7 +12,7 @@ WeaponForm = Ext.extend(Ext.form.FormPanel, {
     return [{
       xtype: 'fieldset',
       labelWidth: 90,
-      title: 'Weapon details',
+      title: 'Supports details',
       layout: 'form',
       change_form: true,
       defaults: {
@@ -68,35 +59,25 @@ WeaponForm = Ext.extend(Ext.form.FormPanel, {
         xtype: 'numberfield',
         minLength: 1,
         maxLength: 3,
-        fieldLabel: 'Range',
+        fieldLabel: 'Defence',
         allowBlank: false,
-        name: 'range'
-      }, {
-        xtype: 'combo',
-        store: this.weaponType,
-        displayField: 'name',
-        triggerAction: "all",
-        typeAhead: true,
-        fieldLabel: 'Weapon type',
-        allowBlank: false,
-        name: 'weapon_type'
+        name: 'defence'
       }, {
         xtype: 'radiogroup',
-        fieldLabel: 'Equip',
-        name: 'equip',
-        //arrange Radio Buttons into 2 columns--
+        fieldLabel: 'Cloth',
+        name: 'cloth',
         columns: 2,
 
         items: [{
           xtype: 'radio',
           boxLabel: 'True',
-          name: 'equip',
+          name: 'cloth',
           checked: true,
           allowBlank: false,
           inputValue: 'true'
         }, {
           xtype: 'radio',
-          name: 'equip',
+          name: 'cloth',
           boxLabel: 'False',
           inputValue: 'false'
         }]
