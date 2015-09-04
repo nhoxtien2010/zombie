@@ -4,6 +4,7 @@ TwitterForZombies::Application.routes.draw do
 match 'get_weapon_type' => 'weapons#getWpType'
 
 # proxy weapons
+match 'weapons/test' => "weapons#test"
 post 'weapons/read' => "weapons#get_index"
 post 'weapons/create' => "weapons#create"
 post 'weapons/update' => "weapons#update"

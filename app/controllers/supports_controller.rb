@@ -1,5 +1,6 @@
 class SupportsController < ApplicationController
-
+  @zombie
+  before_filter :get_zombie
   def create
     supports = []
     a= JSON.parse(params["supports"])
@@ -29,6 +30,15 @@ class SupportsController < ApplicationController
       supports << support
     end
     render :json => {"success" => true, "message" => "Create all supports successfully!", "supports"=> supports}
+  end
+
+  def get_zombie
+    p session
+    zombie_id = session[:current_zombie]
+    @zombie = Zombie.find(zombie_id)
+    p "==============================================================="
+    p @zombie
+    p "==============================================================="
   end
 
   def update
@@ -96,8 +106,7 @@ class SupportsController < ApplicationController
 
 
   def get_index
-    @zombie = Zombie.find(2)
-
+    p session
     supports = Support.order(:id).offset(params[:start]).limit(params[:limit])
     zombie_supports = @zombie.supports
     total = Support.all.length
@@ -128,68 +137,61 @@ class SupportsController < ApplicationController
   end
 
 
+  # def index
+  #   @pages_number = Support.all.length/8
+  #   @supports_number = params[:support_page].to_i||0
+  #   sql = "select * from supports offset #{@supports_number * 8} limit 8"
 
 
-  def get_zombie
-    @zombie = Zombie.find(2)
-  end
+  #   @supports = Support.find_by_sql(sql)
+  #   @zombie_supports = @zombie.supports
+  #   respond_to do |format|
+  #     format.html
+  #   end
+  # end
+
+  # def wear
+  #   support = Support.find(params[:support_id])
+  #   respond_to do |format|
+  #     if @zombie.gold >= support.price
+  #       cloth = Cloth.new
+  #       cloth.zombie = @zombie
+  #       cloth.support = support
+  #       cloth.save
+
+  #       @zombie.gold = @zombie.gold - support.price
+  #       @zombie.attack = @zombie.attack + support.attack
+  #       @zombie.speed = @zombie.speed + support.speed
+  #       @zombie.defence = @zombie.defence + support.defence
+  #       @zombie.save
+
+  #       format.json{ render :json => {:success => true}}
+  #     else
+
+  #       format.json{ render :json => {:success => false}}
 
 
-  def index
-    @pages_number = Support.all.length/8
-    @supports_number = params[:support_page].to_i||0
-    sql = "select * from supports offset #{@supports_number * 8} limit 8"
+  #     end
+  #   end
+  # end
 
+  # def unwear
+  #   success = false
+  #   support = Support.find(params[:support_id])
+  #   cloth= Cloth.where(:support_id => params[:support_id], :zombie_id => @zombie.id).first
+  #   success = true if cloth
+  #   cloth.delete
+  #   cloth.save
 
-    @supports = Support.find_by_sql(sql)
-    @zombie_supports = @zombie.supports
-    respond_to do |format|
-      format.html
-    end
-  end
+  #   @zombie.attack = @zombie.attack - support.attack
+  #   @zombie.speed = @zombie.speed - support.speed
+  #   @zombie.defence = @zombie.defence - support.defence
+  #   @zombie.save
 
-  def wear
-    support = Support.find(params[:support_id])
-    respond_to do |format|
-      if @zombie.gold >= support.price
-        cloth = Cloth.new
-        cloth.zombie = @zombie
-        cloth.support = support
-        cloth.save
+  #   respond_to do |format|
+  #     format.json{render :json => {:success => success}}
+  #   end
 
-        @zombie.gold = @zombie.gold - support.price
-        @zombie.attack = @zombie.attack + support.attack
-        @zombie.speed = @zombie.speed + support.speed
-        @zombie.defence = @zombie.defence + support.defence
-        @zombie.save
-
-        format.json{ render :json => {:success => true}}
-      else
-
-        format.json{ render :json => {:success => false}}
-
-
-      end
-    end
-  end
-
-  def unwear
-    success = false
-    support = Support.find(params[:support_id])
-    cloth= Cloth.where(:support_id => params[:support_id], :zombie_id => @zombie.id).first
-    success = true if cloth
-    cloth.delete
-    cloth.save
-
-    @zombie.attack = @zombie.attack - support.attack
-    @zombie.speed = @zombie.speed - support.speed
-    @zombie.defence = @zombie.defence - support.defence
-    @zombie.save
-
-    respond_to do |format|
-      format.json{render :json => {:success => success}}
-    end
-
-  end
+  # end
 
 end

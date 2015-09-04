@@ -1,15 +1,17 @@
 class LoginController < ApplicationController
 
   def index
+    session[:current_zombie] = nil
   end
   def login
 
-    zombie = Zombie.where(:name => params[:login]['name'], :password => params[:login]['pass'])
+    zombie = Zombie.where(:name => params[:name], :password => params[:password]).first
     respond_to do |format|
-      if zombie.length != 0
-        session[:current_zombie] = zombie.first.id
-        weapons = zombie.first.weapons
-        format.json {render :json => {:success => true, :zombie => zombie.first}}
+      if zombie
+        session[:current_zombie] = zombie.id
+        p session
+        weapons = zombie.weapons
+        format.json {render :json => {:success => true, :zombie => zombie}}
       else
         format.json {render :json => {:success => false}}
       end

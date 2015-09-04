@@ -2,9 +2,16 @@ require 'rubygems'
 require 'json'
 
 class WeaponsController < ApplicationController
-
+  @zombie
   before_filter :get_zombie
 # //////////////////proxy///////////////////////
+
+  def index
+    p 'index', session
+  end
+
+  def test
+  end
 
   def create
 
@@ -147,10 +154,12 @@ class WeaponsController < ApplicationController
     end
   end
 
-  # ///////////////////////////////////////////////////////////////////////
 
   def get_zombie
-    @zombie = Zombie.all.first
+    p 'get_zombie', session
+    zombie_id = session[:current_zombie]
+    @zombie = Zombie.find(zombie_id)
+
   end
   def get_zombie_info
     rs = {'id'=> @zombie.id,
@@ -164,6 +173,7 @@ class WeaponsController < ApplicationController
   end
 
   def get_index
+    p 'get_index', session
     weapons = Weapon.order(:id).offset(params[:start]).limit(params[:limit])
     zombie_weapons = @zombie.weapons
     total = Weapon.all.length
@@ -188,53 +198,6 @@ class WeaponsController < ApplicationController
     end
     respond_to do |format|
       format.json {render :json => {"weapons" => result, "total"=> total}}
-    end
-
-  end
-
-
-# buy weapon for zombie
-  def buy
-    weapon = Weapon.find(params[:weapon_id])
-    respond_to do |format|
-      if @zombie.gold >= weapon.price
-        equip = Equip.new
-        equip.zombie = @zombie
-        equip.weapon = weapon
-        equip.save
-
-        @zombie.gold = @zombie.gold - weapon.price
-        @zombie.attack = @zombie.attack + weapon.attack
-        @zombie.speed = @zombie.speed + weapon.speed
-        @zombie.save
-
-        format.json{ render :json => {:success => true}}
-      else
-
-        format.json{ render :json => {:success => false, :weapon => weapon, :zombie => @zombie}}
-
-
-      end
-    end
-  end
-
-  def unequip
-    success = false
-    weapon = Weapon.find(params[:weapon_id])
-    eq= Equip.where(:weapon_id => params[:weapon_id], :zombie_id => @zombie.id).first
-    success = true if eq
-    eq.delete
-    eq.save
-
-    @zombie.attack = @zombie.attack - weapon.attack
-    @zombie.speed = @zombie.speed - weapon.speed
-    @zombie.save
-    respond_to do |format|
-      if success
-        format.json {render :json =>{:success => true}}
-      else
-        format.json {render :json => {:success => false}}
-      end
     end
 
   end

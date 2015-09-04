@@ -51,7 +51,10 @@ Ext.onReady(function() {
     proxy: proxy,
     reader: reader,
     writer: writer,
-    autoSave: false
+    autoSave: false,
+    baseParams: {
+      token: authentication_token
+    }
   });
 
 
@@ -272,7 +275,10 @@ Ext.onReady(function() {
   var zombie_info = new Ext.data.JsonStore({
     url: '/get_zombie_info',
     root: 'zombie',
-    fields: ['id', 'name', 'birthday', 'gold', 'attack', 'defence', 'bio']
+    fields: ['id', 'name', 'birthday', 'gold', 'attack', 'defence', 'bio'],
+    baseParams: {
+      token: authentication_token
+    }
   });
 
 
@@ -379,12 +385,15 @@ Ext.onReady(function() {
     root: 'supports',
     idPropertive: 'id',
     messageProperty: 'message',
-    fields: ['id', 'name', 'price', 'attack', 'speed', 'defence', 'equip'],
+    fields: ['id', 'name', 'price', 'attack', 'speed', 'defence', 'cloth'],
     writer: new Ext.data.JsonWriter({
-      encode: true
-      // writeAllFields: false,
-      // autoSave: false
+      encode: true,
+      writeAllFields: false
     }),
+    autoSave: false,
+    baseParams: {
+      token: authentication_token
+    },
     proxy: new Ext.data.HttpProxy({
       api: {
         read: 'supports/read',
@@ -447,9 +456,9 @@ Ext.onReady(function() {
         maxValue: 1000
       })
     }, {
-      header: 'Equip?',
+      header: 'Cloth',
       xtype: 'checkcolumn',
-      dataIndex: 'equip',
+      dataIndex: 'cloth',
       width: 55,
       editor: new Ext.form.Checkbox({})
     }
@@ -485,33 +494,37 @@ Ext.onReady(function() {
   }, {
     name: "defence",
     type: "integer"
+  }, {
+    name: "cloth",
+    type: "boolean"
   }]);
 
   // on add function
   var support_window;
 
-
+  var new_support;
   function onAddsupport(btn, ev) {
     if (!add_support_window) {
       add_support_window = new WeaponWindow({
         id: "add_support_window",
         myForm: new SupportForm(),
         buildSave: function() {
-          new_record = new support_record();
-          add_support_window.myForm.getForm().loadRecord(new_record);
+          console.log("save");
+          new_support = new support_record();
+          add_support_window.myForm.getForm().loadRecord(new_support);
           if (add_support_window.myForm.change_form == false) {
             Ext.MessageBox.alert('Warning', 'You must change any fields first!');
           } else {
             values = add_support_window.myForm.getForm().getValues();
 
-            new_record.set('name', values["name"]);
-            new_record.set('price', values["price"]);
-            new_record.set('attack', values["attack"]);
-            new_record.set('speed', values["speed"]);
-            new_record.set('defence', values["defence"]);
-            new_record.set('cloth', values["cloth"]);
+            new_support.set('name', values["name"]);
+            new_support.set('price', values["price"]);
+            new_support.set('attack', values["attack"]);
+            new_support.set('speed', values["speed"]);
+            new_support.set('defence', values["defence"]);
+            new_support.set('cloth', values["cloth"]);
 
-            supportsGrid.getStore().insert(0, new_record);
+            supportsGrid.getStore().insert(0, new_support);
             supportsGrid.getStore().save();
             add_support_window.myForm.change_form = false;
           }
@@ -519,15 +532,15 @@ Ext.onReady(function() {
       });
     }
 
-    new_record = new support_record();
-    add_support_window.myForm.getForm().loadRecord(new_record);
+    new_support = new support_record();
+    add_support_window.myForm.getForm().loadRecord(new_support);
     add_support_window.myForm.getForm().reset();
     add_support_window.show(this);
-  } 
+  }
 
 
 
-  var supportsGrid = new Ext.grid.GridPanel({
+  supportsGrid = new Ext.grid.GridPanel({
     iconCls: 'icon-grid',
     title: 'Listing supports',
     height: 300,

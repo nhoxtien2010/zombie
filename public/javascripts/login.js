@@ -1,8 +1,8 @@
 Ext.onReady(function() {
-  loginForm = new Ext.FormPanel({
+  var loginForm = new Ext.form.FormPanel({
     labelWidth: 75,
     frame: true,
-    title: 'Login',
+    // title: 'Login',
     bodyStyle: 'padding:5px 5px 0',
     width: 350,
     defaults: {
@@ -15,35 +15,60 @@ Ext.onReady(function() {
       allowBlank: false
     }, {
       fieldLabel: 'Password',
-      name: 'password'
+      inputType: 'password',
+      name: 'password',
+      allowBlank: false
     }]
   });
 
-  loginWindow = new WeaponWindow({
-    header: 'Login',
-    myForm: loginForm,
-    buildSave: login_function
+  loginWindow = new Ext.Window({
+    width: 400,
+    height: 150,
+    closeAction: 'hide',
+    layout: 'fit',
+    title: 'Login',
+    closeAction: 'hide',
+    items: [loginForm],
+    buttons: [{
+      text: 'Cancel',
+      handler: function(){
+        loginWindow.hide();
+
+      }
+    },{
+      text: 'Login',
+      handler: login_function
+    }]
   });
 
-  
-  loginWindow.buttons[1].text = "Login";
-  values = loginForm.getForm().getValues();
+  loginWindow.show();
 
-  function login_function() {
+
+
+
+
+   function login_function(){
     Ext.Ajax.request({
       url: '/login/login',
-      success: function(response, opts) {
-        Ext.MessageBox.alert('Warning', 'You are login success!');
+      success: function(response) {
+        var data= Ext.util.JSON.decode(response.responseText);
+        if(data.success)
+        {
+          alert("You login successfully!");
+          window.location.href = '/weapons';
+        }else{
+          alert("Wrong name or password!");
+        }
+
       },
       failure: function(response, opts) {
         Ext.MessageBox.alert('Warning', 'Password or Name invalid!');
       },
       params: {
-        login: values
+        name: loginForm.getForm().getValues()['name'],
+        password: loginForm.getForm().getValues()['password']
       }
     });
-
-
   }
 
 })
